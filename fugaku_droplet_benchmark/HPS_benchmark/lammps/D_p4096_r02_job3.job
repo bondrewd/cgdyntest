@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#PJM -L "rscgrp=large"
+#PJM -L "rscunit=rscunit_ft01"
+#PJM -L "node=2048"
+#PJM --mpi "proc=8192"
+#PJM -g hp230072
+#PJM -L "elapse=00:10:00"
+#PJM -x PJM_LLIO_GFSCACHE=/vol0006
+#PJM -j
+#PJM -S
+
+module switch lang/tcsds-1.2.38
+export OMP_NUM_THREADS=12
+export PLE_MPI_STD_EMPTYFILE=off
+
+export bindir=/vol0601/data/hp230072/tan/Workspace/lammps/lammps-29Oct20-HPS/bin
+llio_transfer $bindir/lmp_parallel
+
+# mpiexec -np 4096 ${bindir}/lmp_parallel -in D_p4096_r02_job3.inp > D_p4096_r02_job3.out
+mpiexec -np 4096 sh -c 'if [ ${PMIX_RANK} == 0 ]; then ${bindir}/lmp_parallel -in D_p4096_r02_job3.inp > D_p4096_r02_job3.out; else ${bindir}/lmp_parallel -in D_p4096_r02_job3.inp; fi'
+

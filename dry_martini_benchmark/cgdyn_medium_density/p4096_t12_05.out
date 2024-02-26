@@ -1,0 +1,340 @@
+****************************************************
+*                                                  *
+*                  GENESIS CGDYN                   *
+*                                                  *
+*        A Molecular Dynamics Simulator with       *
+*           Spatial Decomposition Scheme           *
+*                                                  *
+*               Developed by RIKEN                 *
+*                                                  *
+****************************************************
+ 
+[STEP0] Architecture and Compiler Information
+ 
+GENESIS_Information> GENESIS Information
+  version      = 2.0.0
+  commit ID    = $GENESIS_VERSION$
+  precision    = mixed 
+  nonbonding   = CPU
+
+Build_Information> Compiler Information
+  build host   = u10176@fn01sv02
+  fortran      = frtpx: Fujitsu Fortran Compiler 4.10.0 tcsds-1.2.38
+  option       =  -m -Kocl -Kfast,openmp,parallel,simd=2,noalias -Nlst=t -Koptmsg=2 -Kopenmp  
+  C            = fccpx: Fujitsu C/C++ Compiler 4.10.0 tcsds-1.2.38
+  option       = -m -Kvisimpact -Kocl -Kswp -Kopenmp 
+  defined var. =  -DHAVE_MPI_GENESIS -DOMP -DFFTE -DLAPACK -DDSFMT_MEXP=19937 -DKCOMP
+  link option  = -SSL2BLAMP -Kparallel -Nfjomplib -Kopenmp    
+  MPI Compiler = FUJITSU MPI
+
+  exec. host   = u10176@a19-2000c
+  LD library   = /opt/FJSVxtclanga/tcsds-1.2.37/lib64
+ MPI Runtime = FUJITSU MPI Library 4.0.0 (4.0.1fj4.0.0)
+
+[STEP1] Read Control Parameters
+ 
+Read_Ctrl_Input> Input Files
+  grotopfile = ../DPPC_dup_1000_1.top
+  grocrdfile = step6.5_equil.gro
+ 
+Read_Ctrl_Output> Output Files
+  dcdfile    = p4096_t12_05.dcd
+ 
+Read_Ctrl_Energy> Parameters of Energy Calculations
+  forcefield      = GROMARTINI
+  output_style    =    GENESIS
+ 
+Read_Ctrl_Dynamics> Parameters of MD simulation
+  integrator      =       VVER  nsteps          =       5000
+  timestep        =     0.0300  initial_time    =     0.0000
+  eneout_period   =        100  rstout_period   =          0
+  crdout_period   =       5000  velout_period   =          0
+  nbupdate_period =         20  stoptr_period   =         10
+  lbupdate_period =          0
+  iseed           =         -1
+  annealing       =         no
+  verbose         =         no
+  target_md       =         no
+  steered_md      =         no
+ 
+Read_Ctrl_Ensemble> Parameters for Ensemble
+  ensemble        =        NVT
+  temperature     =    303.150
+  tpcontrol       =   LANGEVIN
+  gamma_t         =      1.000
+ 
+Read_Ctrl_Boundary> Parameters of Boundary Condition
+  type            =       PBC 
+  box_size(x,y,z) =   1597.405  1598.313  1599.511
+  min_domain_cell =          2
+  domain (x,y,z)  =         16        16        16
+ 
+Read_Ctrl_Selection> Parameters of Selection
+  # of groups     =          0
+  # of mole names =          0
+ 
+Read_Ctrl_Restraints> No restraint in the system
+
+Read_Ctrl_Fitting_MD> Parameters of Fitting
+  fitting method  =  TR+ROT   
+  fitting atom    = group1
+  mass_weight     =         no
+ 
+[STEP2] Setup MPI
+ 
+Setup_Mpi_Md> Summary of Setup MPI
+  number of MPI processes   =       4096
+  number of OpenMP threads  =         12
+  total number of CPU cores =      49152
+
+[STEP3] Set Relevant Variables and Structures
+ 
+ Fileio_Gropp> WARNING: macro:m_II re-defined.
+ Fileio_Gropp> WARNING: macro:m_III re-defined.
+ Fileio_Gropp> WARNING: macro:m_IV re-defined.
+ Fileio_Gropp> WARNING: macro:m_V re-defined.
+ Fileio_Gropp> WARNING: macro:m_VI re-defined.
+ Fileio_Gropp> WARNING: macro:m_VII re-defined.
+ Fileio_Gropp> WARNING: macro:m_VIII re-defined.
+ Fileio_Gropp> WARNING: macro:m_IX re-defined.
+ Fileio_Gropp> WARNING: macro:m_X re-defined.
+ Fileio_Gropp> WARNING: macro:m_XI re-defined.
+ Fileio_Gropp> WARNING: macro:m_XII re-defined.
+ Fileio_Gropp> WARNING: macro:m_VI_qq re-defined.
+ Fileio_Gropp> WARNING: macro:m_VII_qq re-defined.
+ Fileio_Gropp> WARNING: macro:m_VIII_qq re-defined.
+ Fileio_Gropp> WARNING: macro:m_sII re-defined.
+ Fileio_Gropp> WARNING: macro:m_sIII re-defined.
+ Fileio_Gropp> WARNING: macro:m_sIV re-defined.
+ Fileio_Gropp> WARNING: macro:m_sV re-defined.
+ Fileio_Gropp> WARNING: macro:m_sVI re-defined.
+ Fileio_Gropp> WARNING: macro:m_sVII re-defined.
+ Fileio_Gropp> WARNING: macro:m_sVIII re-defined.
+ Fileio_Gropp> WARNING: macro:m_sIX re-defined.
+ Fileio_Gropp> WARNING: macro:m_sX re-defined.
+ Fileio_Gropp> WARNING: macro:m_sXI re-defined.
+ Fileio_Gropp> WARNING: macro:m_sXII re-defined.
+ Fileio_Gropp> WARNING: macro:m_sVI_qq re-defined.
+ Fileio_Gropp> WARNING: macro:m_sVII_qq re-defined.
+ Fileio_Gropp> WARNING: macro:m_sVIII_qq re-defined.
+Read_Grotop> Summary of Grotopfile
+  num_moltypes    =          6
+    DPPC                  :
+      num_atoms   =         12
+      num_bonds   =         11
+      num_angls   =          8
+      num_dihes   =          0
+      num_cmaps   =          0
+      num_excls   =          0
+      num_constrs =          0
+      num_pairs   =          0
+      num_vsites2 =          0
+      num_vsites3 =          0
+      num_vsites4 =          0
+      num_vsitesn =          0
+      num_posress =          0
+      num_PWMcos  =          0
+      num_PWMcosns=          0
+      num_IDR_HPS =          0
+      num_IDR_KH  =          0
+    .. not used molecule types were hidden.
+
+  num_molecules   =     100000
+    DPPC                  :  100000
+
+  num_atomtypes   =         38  num_bondtypes   =          0
+  num_angltypes   =          0  num_dihetypes   =          0
+  num_constrtypes =          0  num_cmaptypes   =          0
+  num_nbonparms   =        741
+
+
+Define_Molecule> Summary of molecules
+  num_atoms       =    1200000  num_bonds       =    1100000
+  num_angles      =     800000  num_dihedrals   =          0
+  num_impropers   =          0  num_cmap_terms  =          0
+  num_residues    =          1  num_molecules   =     100000
+  num_segments    =          1  num_deg_freedom =    3600000
+  total_charge    =      0.000
+ 
+Setup_Boundary_Cell> Set Variables for Boundary Condition
+  domains (x,y,z) =         16        16        16
+  ncells (x,y,z)  =         93        94        94
+ 
+Define_Enefunc_Gromacs> Number of Interactions in Each Term
+  bond_ene        =    1100000  angle_ene       =     800000
+  torsion_ene     =          0
+ restraint_groups =          0 restraint_funcs  =          0
+ 
+Setup_Dynamics> Subtract 3 translational degrees of freedom
+ 
+Update_Num_Deg_Freedom> Number of degrees of freedom was updated
+  num_deg_freedom =    3599997 (After removing translation)
+ 
+Random_Init> Initialize the random number
+  seed            = 249700
+
+Setup_Fitting_cgdyn> NO fitting is applied, skip
+  fitting method  =  NO
+ 
+[STEP4] Compute Single Point Energy for Molecules
+ 
+            STEP          ENERGY            BOND           ANGLE         VDWAALS           ELECT
+ --------------- --------------- --------------- --------------- ---------------
+               0   -3580300.3237     420487.0365     213030.2038   -4172347.4542     -41470.1098
+
+[STEP5] Perform Molecular Dynamics Simulation
+ 
+INFO:       STEP            TIME       TOTAL_ENE   POTENTIAL_ENE     KINETIC_ENE            RMSG            BOND           ANGLE         VDWAALS           ELECT     TEMPERATURE          VOLUME
+ --------------- --------------- --------------- --------------- ---------------
+INFO:        100          3.0000   -2801986.8507   -3867095.7358    1065108.8851          2.2940     422811.3976     210643.4013   -4226168.1601    -274382.3746        301.5217 4083796290.4944
+
+INFO:        200          6.0000   -2710387.8876   -3803315.6070    1092927.7194          2.3039     420976.7053     211374.2577   -4141755.6221    -293910.9479        308.9626 4083796290.4944
+
+INFO:        300          9.0000   -2663400.5582   -3762428.5235    1099027.9653          2.3009     422855.4288     213300.7415   -4128849.8574    -269734.8363        310.4882 4083796290.4944
+
+INFO:        400         12.0000   -2681311.9488   -3781212.5771    1099900.6283          2.3011     423930.8177     213404.8474   -4121350.2319    -297198.0103        310.7869 4083796290.4944
+
+INFO:        500         15.0000   -2664960.1782   -3765648.1523    1100687.9740          2.2984     423230.0900     213284.4095   -4117999.2967    -284163.3551        310.9108 4083796290.4944
+
+INFO:        600         18.0000   -2665420.9137   -3765574.7167    1100153.8030          2.3007     422923.1854     213959.2694   -4116940.7944    -285516.3771        310.7606 4083796290.4944
+
+INFO:        700         21.0000   -2674679.4945   -3775861.6718    1101182.1773          2.3002     423515.0228     214858.3041   -4114571.8262    -299663.1726        311.0404 4083796290.4944
+
+INFO:        800         24.0000   -2666558.6685   -3766995.4396    1100436.7710          2.2996     423827.7336     214373.7455   -4111919.3701    -293277.5486        310.9631 4083796290.4944
+
+INFO:        900         27.0000   -2689024.4404   -3791827.5787    1102803.1382          2.3006     424262.1369     214848.3142   -4110888.4317    -320049.5982        311.5493 4083796290.4944
+
+INFO:       1000         30.0000   -2674926.8589   -3777330.4692    1102403.6103          2.3004     423327.9363     214840.5034   -4110218.8602    -305280.0487        311.3235 4083796290.4944
+
+INFO:       1100         33.0000   -2669488.6704   -3770561.9225    1101073.2521          2.2995     424115.1125     215096.4035   -4109195.5273    -300577.9112        311.1557 4083796290.4944
+
+INFO:       1200         36.0000   -2654779.3946   -3756602.6306    1101823.2359          2.2985     424955.5925     215301.5209   -4109013.9188    -287845.8253        311.3671 4083796290.4944
+
+INFO:       1300         39.0000   -2634597.2463   -3736815.7071    1102218.4608          2.2995     425247.2514     215499.9434   -4106630.4887    -270932.4132        311.3605 4083796290.4944
+
+INFO:       1400         42.0000   -2674835.7483   -3778147.6804    1103311.9322          2.2995     424720.3124     215705.1195   -4107767.3296    -310805.7827        311.6856 4083796290.4944
+
+INFO:       1500         45.0000   -2677162.0596   -3780839.1451    1103677.0855          2.2965     424174.5041     215802.6872   -4108162.3748    -312653.9617        311.8242 4083796290.4944
+
+INFO:       1600         48.0000   -2676349.6118   -3779926.6976    1103577.0857          2.2987     424997.7392     215875.1456   -4107364.6024    -313434.9799        311.6541 4083796290.4944
+
+INFO:       1700         51.0000   -2647437.3768   -3750546.7196    1103109.3427          2.2961     425142.3165     216089.8878   -4107648.1242    -284130.7997        311.6907 4083796290.4944
+
+INFO:       1800         54.0000   -2668520.6993   -3770852.3971    1102331.6978          2.2987     424941.1154     215406.2194   -4106738.7928    -304460.9391        311.2893 4083796290.4944
+
+INFO:       1900         57.0000   -2677232.9110   -3780604.9969    1103372.0859          2.3007     424835.9097     216047.5152   -4106952.2731    -314536.1487        311.8519 4083796290.4944
+
+INFO:       2000         60.0000   -2653142.6820   -3757835.2892    1104692.6071          2.3038     424995.7026     216119.5542   -4105217.5948    -293732.9512        312.1771 4083796290.4944
+
+INFO:       2100         63.0000   -2666310.2384   -3771278.1689    1104967.9304          2.2986     424480.2821     215736.5354   -4106224.8489    -305270.1375        312.1005 4083796290.4944
+
+INFO:       2200         66.0000   -2649731.1779   -3754164.4499    1104433.2720          2.3008     425624.4358     215521.8464   -4105040.0069    -290270.7252        311.9881 4083796290.4944
+
+INFO:       2300         69.0000   -2665534.9767   -3769260.4037    1103725.4270          2.2980     423680.9692     215750.6812   -4103603.8529    -305088.2011        311.7064 4083796290.4944
+
+INFO:       2400         72.0000   -2664152.6043   -3768183.4961    1104030.8919          2.2993     425572.9216     216549.1184   -4105668.9056    -304636.6305        312.0360 4083796290.4944
+
+INFO:       2500         75.0000   -2641702.0259   -3746481.4850    1104779.4591          2.3030     425490.2738     215904.5864   -4104863.0845    -283013.2607        312.0862 4083796290.4944
+
+INFO:       2600         78.0000   -2672505.1955   -3776867.7945    1104362.5990          2.3014     425228.4515     216302.7230   -4106791.6567    -311607.3122        312.0722 4083796290.4944
+
+INFO:       2700         81.0000   -2660469.0868   -3763977.7294    1103508.6426          2.2991     425204.2125     216277.3021   -4106906.1907    -298553.0533        311.8123 4083796290.4944
+
+INFO:       2800         84.0000   -2656563.6642   -3760118.7851    1103555.1209          2.2996     425339.8077     215712.8528   -4105864.5680    -295306.8775        311.7553 4083796290.4944
+
+INFO:       2900         87.0000   -2665927.9523   -3768942.2495    1103014.2973          2.2997     423563.6846     216438.8076   -4104015.5880    -304929.1538        311.6277 4083796290.4944
+
+INFO:       3000         90.0000   -2661321.3428   -3765371.6806    1104050.3379          2.3000     426121.2126     216163.6778   -4104927.8912    -302728.6798        311.7751 4083796290.4944
+
+INFO:       3100         93.0000   -2653686.3634   -3756112.3002    1102425.9368          2.2957     425051.1412     216172.4190   -4103214.6607    -294121.1997        311.4501 4083796290.4944
+
+INFO:       3200         96.0000   -2650135.2089   -3753951.5327    1103816.3238          2.3008     425566.6448     216370.2326   -4104366.3847    -291522.0253        311.9634 4083796290.4944
+
+INFO:       3300         99.0000   -2659916.8010   -3764912.6852    1104995.8842          2.3013     425245.1441     216254.9672   -4103395.4455    -303017.3510        312.0739 4083796290.4944
+
+INFO:       3400        102.0000   -2659645.0508   -3764716.8797    1105071.8289          2.3009     424669.1726     216864.7486   -4104423.2642    -301827.5367        312.3113 4083796290.4944
+
+INFO:       3500        105.0000   -2671924.0977   -3776268.9544    1104344.8567          2.2996     424992.3187     216456.6436   -4103449.6053    -314268.3113        312.0026 4083796290.4944
+
+INFO:       3600        108.0000   -2681911.3326   -3786341.8839    1104430.5513          2.2996     425014.1995     216135.7830   -4103738.0816    -323753.7848        312.0535 4083796290.4944
+
+INFO:       3700        111.0000   -2656501.5702   -3760645.6075    1104144.0373          2.2968     424035.9662     216901.4675   -4103454.8196    -298128.2216        312.0467 4083796290.4944
+
+INFO:       3800        114.0000   -2654271.2314   -3758236.8539    1103965.6225          2.2999     424979.6781     217110.5389   -4102553.9718    -297773.0991        311.8967 4083796290.4944
+
+INFO:       3900        117.0000   -2678516.2986   -3784719.9350    1106203.6364          2.3028     426544.8314     217197.7565   -4103148.0353    -325314.4876        312.4558 4083796290.4944
+
+INFO:       4000        120.0000   -2663376.3594   -3768521.4478    1105145.0884          2.2975     424634.2818     217145.0068   -4102504.7060    -307796.0305        312.0970 4083796290.4944
+
+INFO:       4100        123.0000   -2676035.1519   -3780211.6621    1104176.5102          2.2990     425035.4429     216850.1395   -4102641.9791    -319455.2655        311.9411 4083796290.4944
+
+INFO:       4200        126.0000   -2653541.9787   -3758244.2184    1104702.2397          2.2994     425563.2306     216710.6178   -4102842.8080    -297675.2588        312.1441 4083796290.4944
+
+INFO:       4300        129.0000   -2656775.6423   -3761244.8599    1104469.2176          2.2976     424742.4361     216864.5582   -4101822.6826    -301029.1717        312.0070 4083796290.4944
+
+INFO:       4400        132.0000   -2667652.7029   -3772298.3246    1104645.6216          2.3008     425992.9579     216685.1995   -4103732.2793    -311244.2027        311.9021 4083796290.4944
+
+INFO:       4500        135.0000   -2670503.3396   -3774642.4265    1104139.0869          2.2973     425416.2462     216996.8864   -4104455.6046    -312599.9546        312.0280 4083796290.4944
+
+INFO:       4600        138.0000   -2662985.6616   -3767853.7330    1104868.0714          2.2995     425109.4944     217023.6728   -4102918.4703    -307068.4299        312.1154 4083796290.4944
+
+INFO:       4700        141.0000   -2633676.0840   -3738616.1548    1104940.0708          2.3008     425020.3709     216707.1559   -4101701.2568    -278642.4247        312.0732 4083796290.4944
+
+INFO:       4800        144.0000   -2649390.1131   -3754333.1542    1104943.0412          2.2961     425929.9846     216854.6895   -4102341.5694    -294776.2589        312.1133 4083796290.4944
+
+INFO:       4900        147.0000   -2661662.0431   -3765822.9046    1104160.8615          2.2997     424789.0780     217121.5431   -4101228.0668    -306505.4588        311.9416 4083796290.4944
+
+INFO:       5000        150.0000   -2650409.0848   -3756857.4459    1106448.3611          2.2991     426350.1316     216983.0326   -4101408.1332    -298782.4768        312.6372 4083796290.4944
+
+ 
+[STEP6] Deallocate Arrays
+ 
+Output_Time> Averaged timer profile (Min, Max)
+  total time      =      28.267
+    setup         =      22.945
+    dynamics      =       5.322
+      energy      =       2.381
+      integrator  =       1.660
+      migration   =       1.013
+      pairlist    =       0.028 (       0.005,       0.094)
+  energy           
+    bond          =       0.020 (       0.008,       0.043)
+    angle         =       0.038 (       0.007,       0.127)
+    dihedral      =       0.008 (       0.008,       0.009)
+    base stacking =       0.000 (       0.000,       0.000)
+    nonbond       =       0.293 (       0.019,       0.863)
+      CG exv      =       0.251 (       0.009,       0.768)
+      CG DNA bp   =       0.000 (       0.000,       0.000)
+      CG DNA exv  =       0.000 (       0.000,       0.000)
+      CG ele      =       0.041 (       0.010,       0.108)
+      CG PWMcos   =       0.000 (       0.000,       0.000)
+      CG PWMcosns =       0.000 (       0.000,       0.000)
+      CG IDR-HPS  =       0.000 (       0.000,       0.000)
+      CG IDR-KH   =       0.000 (       0.000,       0.000)
+      CG KH       =       0.000 (       0.000,       0.000)
+      Contact     =       0.000 (       0.000,       0.000)
+      pme real    =       0.000 (       0.000,       0.000)
+      pme recip   =       0.000 (       0.000,       0.000)
+    solvation     =       0.000 (       0.000,       0.000)
+      polar       =       0.000 (       0.000,       0.000)
+      non-polar   =       0.000 (       0.000,       0.000)
+    restraint     =       0.000 (       0.000,       0.000)
+    qmmm          =       0.000 (       0.000,       0.000)
+    morph         =       0.000 (       0.000,       0.000)
+  integrator       
+    constraint    =       0.000 (       0.000,       0.000)
+    update        =       0.000 (       0.000,       0.000)
+    comm_coord    =       0.801 (       0.441,       1.421)
+    comm_force    =       0.656 (       0.329,       1.386)
+  migration       =       1.013 (       1.012,       1.013)
+    comm_migrate  =       0.586 (       0.459,       0.669)
+    ptl_migrate   =       0.014 (       0.002,       0.046)
+    bond_migrate  =       0.003 (       0.001,       0.005)
+    angl_migrate  =       0.003 (       0.001,       0.006)
+    dihe_migrate  =       0.001 (       0.001,       0.001)
+    contact_migr  =       0.000 (       0.000,       0.000)
+    stack_migrate =       0.000 (       0.000,       0.000)
+    pwmcos_migrate =       0.000 (       0.000,       0.000)
+    pwmcosns_migr  =       0.000 (       0.000,       0.000)
+    nonb_update    =       0.038 (       0.001,       0.228)
+

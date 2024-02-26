@@ -1,0 +1,46 @@
+[INPUT]
+grotopfile          = ../DPPC_dup_1000_1.top
+grocrdfile          = step6.5_equil.gro
+
+[OUTPUT]
+dcdfile             = p256_t12_03.dcd
+
+[ENERGY]
+forcefield          = GroMartini
+electrostatic       = RF
+cg_switchdist_vdw   = 10.0
+cg_cutoffdist_vdw   = 11.0
+cg_cutoffdist_ele   = 11.0
+cg_cellsize_min     = 17.0
+cg_pairlistdist_vdw = 14.0
+cg_pairlistdist_ele = 14.0
+dielec_const        = 15.0
+output_style        = GENESIS
+upper_force_value   = 10.0
+assign_force_max    = yes
+
+[DYNAMICS]
+integrator          = VVER
+nsteps              = 5000
+timestep            = 0.030
+crdout_period       = 5000
+eneout_period       = 100
+nbupdate_period     = 20
+gen_velocity        = no
+
+[CONSTRAINTS]
+rigid_bond          = NO
+
+[ENSEMBLE]
+ensemble            = NVT
+tpcontrol           = LANGEVIN
+temperature         = 303.15
+
+[BOUNDARY]
+type                = PBC
+box_size_x          = 1597.4049
+box_size_y          = 1598.3130
+box_size_z          = 1599.5110
+domain_x            =  8
+domain_y            =  8
+domain_z            =  4
