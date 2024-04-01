@@ -41,15 +41,9 @@ function analyze_structure(i_test, i_run)
     traj_fname = @sprintf("/home/jung/scallop/tests/droplet/80_tdp43_1000_dup_test_280K/test%d/step%d.dcd", i_test, i_run)
 
     mytop = read_grotop(top_fname)
-    if i_test == 1
-        args = Dict("verbose"=>false, "begin" => 1, "end" => 10000, "step" => 1)
-    else
-        args = Dict("verbose"=>false, "begin" => 1, "end" => 10000, "step" => 10)
-    end
+    args = Dict("verbose"=>false, "begin" => 1, "end" => 10000, "step" => 1)
     mytraj = read_dcd(traj_fname, args)
-    # mytraj = read_dcd(traj_fname)
     num_frames = length(mytraj.conformations)
-    # println(" Total number of frames:", num_frames)
 
     # get box sizes
     box_size_x = mytraj.boundary_box_size[1, 1] # 1000
@@ -121,11 +115,6 @@ function analyze_structure(i_test, i_run)
         com_sin_circ_coors = sum(sin_circ_coors, dims=2) / size(sin_circ_coors)[2]
         com_circ_coors = reverse_tan_vec(com_cos_circ_coors[:], com_sin_circ_coors[:])
         com_real_coors = com_circ_coors ./ (2π) .* box_size
-        # for i_chain in 1:num_pro_B
-        #     com_chain = com_chain_tmp[:, i_chain]
-        #     com_new   = rem.(com_chain .- com_real_coors, box_size, RoundNearest) .+ (box_size .* 0.5)
-        #     com_chain_tmp[:, i_chain] = com_new
-        # end
         @printf(log_out, " Step %8d >>>> droplet size: %8.3f %8.3f %8.3f \n", i_step, com_real_coors[1], com_real_coors[2], com_real_coors[3])
 
 
@@ -171,7 +160,7 @@ function analyze_structure(i_test, i_run)
     # ======
     # output
     # ======
-    fname = @sprintf("test%d_chain_pairwise_distance_sum_step_%02d.dat", i_test, i_run)
+    fname = @sprintf("test%d_droplet_shape_step_%02d.dat", i_test, i_run)
     fout  = open(fname, "w")
     for i_step in 1:num_frames
         @printf(fout, "%6d  %18.3f \n", i_step, droplet_shape_all[i_step])
