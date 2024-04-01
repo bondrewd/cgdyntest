@@ -8,8 +8,8 @@ def main(i_test):
 
     # i_test = 1
 
-    m_data_name = "../03_mixing_coordinate/test{0}_chain_distance_mixing_step_01.dat".format(i_test)
-    e_data_name = "../06_shape_analysis/test{0}_chain_pairwise_distance_sum_step_01.dat".format(i_test)
+    m_data_name = "../03_mixing_coordinate/output_data/test{0}_chain_distance_mixing_step_01.dat".format(i_test)
+    e_data_name = "../05_shape_analysis/output_data/test{0}_droplet_shape_step_01.dat".format(i_test)
 
     m_data = np.loadtxt(m_data_name)
     e_data = np.loadtxt(e_data_name, usecols=(1))
