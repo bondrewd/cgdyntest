@@ -18,7 +18,7 @@ cd run_high_density/
 GENESIS/bin/cgdyn step1.inp > step1.log
 GENESIS/bin/cgdyn step2.inp > step2.log
 GENESIS/bin/cgdyn step3.inp > step3.log
-# ...
+# ... (repeate...)
 
 cd ..
 
@@ -27,10 +27,26 @@ cd run_low_density/
 GENESIS/bin/cgdyn step1.inp > step1.log
 GENESIS/bin/cgdyn step2.inp > step2.log
 GENESIS/bin/cgdyn step3.inp > step3.log
-# ...
+# ... (repeate...)
 
 cd ../../
 ```
+
+### Structures
+
+#### High density system
+
+- Initial structure: `00_MD/output_high_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_5_md_00_frame_00000.gro`
+- Final structure: `00_MD/output_high_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_5_md_60_frame_02000.gro`
+- Ohter intermediate structure: `00_MD/output_high_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_5_md_*_frame_*.gro`
+
+
+#### Low density system
+
+- Initial structure: `00_MD/output_low_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_2_md_00_frame_00000.gro`
+- Final structure: `00_MD/output_low_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_2_md_60_frame_02000.gro`
+- Ohter intermediate structure: `00_MD/output_low_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_2_md_*_frame_*.gro`
+
 
 ## Data analysis of multiple droplet dynamics (Figure 4)
 

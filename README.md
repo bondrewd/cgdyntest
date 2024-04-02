@@ -32,10 +32,23 @@ Analysis scripts are included in each directory.
 
 ##### Application 1: Two droplet system:
 
-- Initial structure: `00_MD/rst/tdp43_1000_minimized.rst` (MD restart file)
-- Final structure: `00_MD/output/tdp43_test1_frame10000_with_clustering_labels.cif`
-- Intermediate structures: `00_MD/output/tdp43_test1_frame*_with_clustering_labels.cif`
+- Initial structure: `application01_two_droplet_fusion/00_MD/rst/tdp43_1000_minimized.rst` (MD restart file)
+- Final structure: `application01_two_droplet_fusion/00_MD/output/tdp43_test1_frame10000_with_clustering_labels.cif`
+- Intermediate structures: `application01_two_droplet_fusion/00_MD/output/tdp43_test1_frame*_with_clustering_labels.cif`
 
 
 ##### Application 2: Multiple droplet system:
+
+###### High density system
+
+- Initial structure: `application02_multiple_droplet_fusion/00_MD/output_high_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_5_md_00_frame_00000.gro`
+- Final structure: `application02_multiple_droplet_fusion/00_MD/output_high_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_5_md_60_frame_02000.gro`
+- Ohter intermediate structure: `application02_multiple_droplet_fusion/00_MD/output_high_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_5_md_*_frame_*.gro`
+
+
+###### Low density system
+
+- Initial structure: `application02_multiple_droplet_fusion/00_MD/output_low_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_2_md_00_frame_00000.gro`
+- Final structure: `application02_multiple_droplet_fusion/00_MD/output_low_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_2_md_60_frame_02000.gro`
+- Ohter intermediate structure: `application02_multiple_droplet_fusion/00_MD/output_low_density/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho0.56_s_5_d_2_md_*_frame_*.gro`
 
