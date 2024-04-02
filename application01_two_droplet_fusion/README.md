@@ -7,10 +7,16 @@ GENESIS/bin/cgdyn step2.inp > step2.log
 GENESIS/bin/cgdyn step3.inp > step3.log
 GENESIS/bin/cgdyn step4.inp > step4.log
 GENESIS/bin/cgdyn step5.inp > step5.log
-# ...
+# ... (repeate...)
 
 cd ../../
 ```
+
+### Structures
+
+- Initial structure: `00_MD/rst/tdp43_1000_minimized.rst` (MD restart file)
+- Final structure: `00_MD/output/tdp43_test1_frame10000_with_clustering_labels.cif`
+- Intermediate structures: `00_MD/output/tdp43_test1_frame*_with_clustering_labels.cif`
 
 ## Data analysis of droplet fusion (Figure 3)
 

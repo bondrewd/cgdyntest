@@ -27,3 +27,15 @@ For MD system preparation and analysis, use the following program:
 - `application02_multiple_droplet_fusion/`: MD simulations of near-realistic-scale multiple-droplet systems (Figure 4)
 
 Analysis scripts are included in each directory.
+
+#### Structures:
+
+##### Application 1: Two droplet system:
+
+- Initial structure: `00_MD/rst/tdp43_1000_minimized.rst` (MD restart file)
+- Final structure: `00_MD/output/tdp43_test1_frame10000_with_clustering_labels.cif`
+- Intermediate structures: `00_MD/output/tdp43_test1_frame*_with_clustering_labels.cif`
+
+
+##### Application 2: Multiple droplet system:
+

@@ -1,0 +1,1 @@
+../../01_analysis/07_MD_snapshots/tdp43_test1_frame4000_with_clustering_labels.cif
