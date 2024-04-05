@@ -1,0 +1,6 @@
+Figure 2, Supporting Figure 1, Supporting Figure 2
+
+Please untar tar.gz files in crd directory to get gro files
+Rst files are split into three files. Please run the followings:
+$ cat _DROPLET_test_eq_s_5_d_2_05_02_xa* > _DROPLET_test_eq_s_5_d_2_05_02.rst
+$ cat _DROPLET_test_eq_s_5_d_5_05_05_xa* > _DROPLET_test_eq_s_5_d_5_05_05.rst
