@@ -1,0 +1,45 @@
+[INPUT]
+grotopfile            = hero11_tdp43_r_01.top
+grocrdfile            = crd/hero11_tdp43_run_01.gro
+rstfile               = rst/hero11_tdp43_md3_r_01.rst
+
+[OUTPUT]
+rstfile               = md_lb.rst
+dcdfile               = md_lb.dcd
+
+[ENERGY]
+forcefield            = RESIDCG
+electrostatic         = CUTOFF
+cg_IDR_HPS_epsilon    = 0.2
+cg_cutoffdist_126     = 20.0
+cg_cutoffdist_ele     = 35.0
+cg_pairlistdist_126   = 23.0
+cg_pairlistdist_ele   = 38.0
+
+[DYNAMICS]
+integrator            = VVER
+nsteps                = 10000000
+timestep              = 0.010
+eneout_period         = 10000
+nbupdate_period       = 20
+rstout_period         = 10000000
+crdout_period         = 1000000
+lbupdate_period       = 1000000
+
+[CONSTRAINTS]
+rigid_bond            = NO 
+
+[ENSEMBLE]
+ensemble              = NVT
+tpcontrol             = LANGEVIN
+temperature           = 350
+gamma_t               = 0.01
+
+[BOUNDARY]
+type                  = PBC   
+box_size_x            = 1000.0
+box_size_y            = 1000.0
+box_size_z            = 1000.0
+domain_x              = 4
+domain_y              = 4
+domain_z              = 4

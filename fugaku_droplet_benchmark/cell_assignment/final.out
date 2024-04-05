@@ -1,0 +1,334 @@
+[0] MPI startup(): I_MPI_DEVICE environment variable is not supported.
+[0] MPI startup(): To check the list of supported variables, use the impi_info utility or refer to https://software.intel.com/en-us/mpi-library/documentation/get-started.
+****************************************************
+*                                                  *
+*                  GENESIS CGDYN                   *
+*                                                  *
+*        A Molecular Dynamics Simulator with       *
+*           Spatial Decomposition Scheme           *
+*                                                  *
+*               Developed by RIKEN                 *
+*                                                  *
+****************************************************
+ 
+[STEP0] Architecture and Compiler Information
+ 
+GENESIS_Information> GENESIS Information
+  version      = 2.0.0
+  commit ID    = $GENESIS_VERSION$
+  precision    = mixed 
+  nonbonding   = CPU
+
+Build_Information> Compiler Information
+  build host   = jung@goby
+  fortran      = ifort (IFORT) 2021.4.0 20210910
+  option       = 
+  -axCORE-AVX512 -g -O3  -qmkl=parallel  -assume byterecl -qopenmp  
+  C            = icc (ICC) 2021.4.0 20210910
+  option       = -O3 -ip -axCORE-AVX2  -qopenmp 
+  defined var. = 
+  -DHAVE_MPI_GENESIS -DOMP -DIFORT19 -DFFTE -DLAPACK -DDSFMT_MEXP=19937 -DINTEL
+  link option  = 
+  -assume byterecl -lgfortran -qopenmp  -lmkl_intel_lp64 -lmkl_sequential -lmkl_
+ core -lmkl_lapack95_lp64   
+  MPI Compiler = Intel(R) MPI
+
+Runtime_Information> Machine and Library Information
+  date       = 2023/04/18 20:01:00
+  cpu model    = Intel(R) Xeon(R) Gold 6142 CPU @ 2.60GHz
+  exec. host   = jung@goby16
+  LD library   = 
+ /usr/local/cuda-11.4/lib64:/home/mdsoft/intel/intel/oneapi/mpi/2021.4.0//libfab
+ ric/lib:/home/mdsoft/intel/intel/oneapi/mpi/2021.4.0//lib/release:/home/mdsoft/
+ intel/intel/oneapi/mpi/2021.4.0//lib:/home/mdsoft/intel/intel/oneapi/mkl/2021.4
+ .0/lib/intel64:/home/mdsoft/intel/intel/oneapi/compiler/2021.4.0/linux/lib:/hom
+ e/mdsoft/intel/intel/oneapi/compiler/2021.4.0/linux/lib/x64:/home/mdsoft/intel/
+ intel/oneapi/compiler/2021.4.0/linux/lib/emu:/home/mdsoft/intel/intel/oneapi/co
+ mpiler/2021.4.0/linux/lib/oclfpga/host/linux64/lib:/home/mdsoft/intel/intel/one
+ api/compiler/2021.4.0/linux/lib/oclfpga/linux64/lib:/home/mdsoft/intel/intel/on
+ eapi/compiler/2021.4.0/linux/compiler/lib/intel64_lin
+ MPI Runtime = Intel(R) MPI Library 2021.4 for Linux* OS
+
+
+[STEP1] Read Control Parameters
+ 
+Read_Ctrl_Input> Input Files
+  grotopfile = hero11_tdp43_r_01.top
+  grocrdfile = analysis/01_extract_final_structure/hero11_tdp43_run_03.gro
+ 
+Read_Ctrl_Output> Output Files
+ 
+Read_Ctrl_Energy> Parameters of Energy Calculations
+  forcefield      =    RESIDCG
+  output_style    =    GENESIS
+ 
+Read_Ctrl_Dynamics> Parameters of MD simulation
+  integrator      =       VVER  nsteps          =         10
+  timestep        =     0.0100  initial_time    =     0.0000
+  eneout_period   =         10  rstout_period   =          0
+  crdout_period   =          0  velout_period   =          0
+  nbupdate_period =         10  stoptr_period   =         10
+  lbupdate_period =          0
+  iseed           =         -1
+  annealing       =         no
+  verbose         =         no
+  target_md       =         no
+  steered_md      =         no
+ 
+Read_Ctrl_Ensemble> Parameters for Ensemble
+  ensemble        =        NVT
+  temperature     =    300.000
+  tpcontrol       =   LANGEVIN
+  gamma_t         =      0.010
+ 
+Read_Ctrl_Boundary> Parameters of Boundary Condition
+  type            =       PBC 
+  box_size(x,y,z) =   1000.000  1000.000  1000.000
+  min_domain_cell =          2
+ 
+Read_Ctrl_Selection> Parameters of Selection
+  # of groups     =          0
+  # of mole names =          0
+ 
+Read_Ctrl_Restraints> No restraint in the system
+
+Read_Ctrl_Fitting_MD> Parameters of Fitting
+  fitting method  =  TR+ROT   
+  fitting atom    = group1
+  mass_weight     =         no
+ 
+[STEP2] Setup MPI
+ 
+Setup_Mpi_Md> Summary of Setup MPI
+  number of MPI processes   =         64
+  number of OpenMP threads  =          1
+  total number of CPU cores =         64
+
+[STEP3] Set Relevant Variables and Structures
+ 
+Read_Grotop> Summary of Grotopfile
+  num_moltypes    =          2
+    hero11                :
+      num_atoms   =         99
+      num_bonds   =         98
+      num_angls   =          0
+      num_dihes   =          0
+      num_cmaps   =          0
+      num_excls   =          0
+      num_constrs =          0
+      num_pairs   =          0
+      num_vsites2 =          0
+      num_vsites3 =          0
+      num_vsites4 =          0
+      num_vsitesn =          0
+      num_posress =          0
+      num_PWMcos  =          0
+      num_PWMcosns=          0
+      num_IDR_HPS =          1
+      num_IDR_KH  =          0
+    tdp43                 :
+      num_atoms   =        154
+      num_bonds   =        153
+      num_angls   =         30
+      num_dihes   =         30
+      num_cmaps   =          0
+      num_excls   =          0
+      num_constrs =          0
+      num_pairs   =         20
+      num_vsites2 =          0
+      num_vsites3 =          0
+      num_vsites4 =          0
+      num_vsitesn =          0
+      num_posress =          0
+      num_PWMcos  =          0
+      num_PWMcosns=          0
+      num_IDR_HPS =          1
+      num_IDR_KH  =          0
+    .. not used molecule types were hidden.
+
+  num_molecules   =        600
+    hero11                :  100
+    tdp43                 :  500
+
+  num_atomtypes   =         33  num_bondtypes   =          0
+  num_angltypes   =          0  num_dihetypes   =          0
+  num_flangltypes           20
+  num_fldihetypes          400
+  num_constrtypes =          0  num_cmaptypes   =          0
+  num_nbonparms   =          0
+  num_basestacktypes  =     16
+  num_basepairtypes   =      4
+  num_basecrosstypes  =     32
+  num_cgdnaexvtypes   =      6
+  num_cgelemolpairs   =      1
+  num_cg_IDR_HPS_atomtypes  =     24
+  num_cg_KH_atomtypes  =    20
+
+  num_cg_pair_MJ_eps   =   400
+
+Define_Molecule> Summary of molecules
+  num_atoms       =      86900  num_bonds       =      86300
+  num_angles      =      15000  num_dihedrals   =      15000
+  num_impropers   =          0  num_cmap_terms  =          0
+  num_residues    =      86900  num_molecules   =        600
+  num_segments    =          2  num_deg_freedom =     260700
+  total_charge    =   3800.000
+ 
+Setup_Boundary_Cell> Set Variables for Boundary Condition
+  domains (x,y,z) =          4         4         4
+  ncells (x,y,z)  =         43        43        43
+ 
+cell_range:    0   0   0   0   1   1   1  11  11  11
+cell_range:   21   1   1   1  12  13  13  21  20  22
+cell_range:   22   2   1   1  22  10   9  33  22  22
+cell_range:   27   3   2   1  30  23   8  43  33  22
+cell_range:   32   0   0   2   1   1  23  11   9  34
+cell_range:   29   1   3   1  11  33  13  21  43  21
+cell_range:   30   2   3   1  22  35  13  29  43  22
+cell_range:   23   3   1   1  34  10   9  43  22  22
+cell_range:   25   1   2   1  11  21  10  21  32  21
+cell_range:   26   2   2   1  22  23   9  29  34  22
+cell_range:   31   3   3   1  30  34   8  43  43  22
+cell_range:   53   1   1   3  12  11  36  21  20  43
+cell_range:   55   3   1   3  33  14  30  43  22  43
+cell_range:   57   1   2   3   9  21  32  21  31  43
+cell_range:   59   3   2   3  33  23  31  43  31  43
+cell_range:   62   2   3   3  22  32  37  32  43  43
+cell_range:   54   2   1   3  22  12  35  32  22  43
+cell_range:   58   2   2   3  22  23  36  32  31  43
+cell_range:   63   3   3   3  33  32  31  43  43  43
+cell_range:   61   1   3   3   9  32  32  21  43  43
+cell_range:   24   0   2   1   1  21  12  10  30  21
+cell_range:    7   3   1   0  34  10   1  43  22   8
+cell_range:    8   0   2   0   1  21   1  10  30  11
+cell_range:    3   3   0   0  34   1   1  43   9  11
+cell_range:   14   2   3   0  22  35   1  29  43  12
+cell_range:   16   0   0   1   1   1  12  11  11  22
+cell_range:   18   2   0   1  22   1  13  33   9  22
+cell_range:   11   3   2   0  30  23   1  43  33   7
+cell_range:   46   2   3   2  22  32  23  32  43  36
+cell_range:   47   3   3   2  33  32  23  43  43  30
+cell_range:   49   1   0   3  12   1  33  21  10  43
+cell_range:   12   0   3   0   1  31   1  10  43  10
+cell_range:   34   2   0   2  22   1  23  32  11  37
+cell_range:   17   1   0   1  12   1  13  21  12  22
+cell_range:   37   1   1   2  12  11  23  21  20  35
+cell_range:   50   2   0   3  22   1  38  32  11  43
+cell_range:   52   0   1   3   1  10  33  11  20  43
+cell_range:   56   0   2   3   1  21  30   8  31  43
+cell_range:   40   0   2   2   1  21  22   8  31  29
+cell_range:    2   2   0   0  22   1   1  33   9  12
+cell_range:   41   1   2   2   9  21  22  21  31  31
+cell_range:    4   0   1   0   1  12   1  11  20  12
+cell_range:   44   0   3   2   1  32  22   8  43  33
+cell_range:    1   1   0   0  12   1   1  21  12  12
+cell_range:   48   0   0   3   1   1  35  11   9  43
+cell_range:   10   2   2   0  22  23   1  29  34   8
+cell_range:   43   3   2   2  33  23  23  43  31  30
+cell_range:   19   3   0   1  34   1  12  43   9  22
+cell_range:   60   0   3   3   1  32  34   8  43  43
+cell_range:   28   0   3   1   1  31  11  10  43  21
+cell_range:   35   3   0   2  33   1  23  43  13  33
+cell_range:    5   1   1   0  12  13   1  21  20  12
+cell_range:    6   2   1   0  22  10   1  33  22   8
+cell_range:    9   1   2   0  11  21   1  21  32   9
+cell_range:   15   3   3   0  30  34   1  43  43   7
+cell_range:   13   1   3   0  11  33   1  21  43  12
+cell_range:   45   1   3   2   9  32  22  21  43  31
+cell_range:   42   2   2   2  22  23  23  32  31  35
+cell_range:   51   3   0   3  33   1  34  43  13  43
+cell_range:   36   0   1   2   1  10  23  11  20  32
+cell_range:   39   3   1   2  33  14  23  43  22  29
+cell_range:   33   1   0   2  12   1  23  21  10  32
+cell_range:   20   0   1   1   1  12  13  11  20  22
+cell_range:   38   2   1   2  22  12  23  32  22  34
+Define_Enefunc_Gromacs> Number of Interactions in Each Term
+  bond_ene        =      86300  angle_ene       =       6500
+  flex_angle_ene  =       8500
+  torsion_ene     =      15000
+ restraint_groups =          0 restraint_funcs  =          0
+ 
+Setup_Dynamics> Subtract 3 translational degrees of freedom
+ 
+Update_Num_Deg_Freedom> Number of degrees of freedom was updated
+  num_deg_freedom =     260697 (After removing translation)
+ 
+Random_Init> Initialize the random number
+  seed            = 226130
+
+Setup_Fitting_cgdyn> NO fitting is applied, skip
+  fitting method  =  NO
+ 
+[STEP4] Compute Single Point Energy for Molecules
+ 
+            STEP          ENERGY            BOND           ANGLE        DIHEDRAL  NATIVE_CONTACT NON-NATIVE_CONT           ELECT         IDR_HPS          CG_EXV
+ --------------- --------------- --------------- --------------- ---------------
+               0      -4725.7892      31481.1716     -13206.9573     -10249.0952      -3572.4920          0.0000        103.9656      -9282.3817          0.0000
+
+[STEP5] Perform Molecular Dynamics Simulation
+ 
+Initial_Velocity> Generate initial velocities
+  iseed           =     226130
+  temperature     =    300.000
+ 
+Random_Init_Velocity> Initialize the random number
+  seed            = 226130
+
+INFO:       STEP            TIME       TOTAL_ENE   POTENTIAL_ENE     KINETIC_ENE            RMSG            BOND           ANGLE        DIHEDRAL         IDR_HPS  NATIVE_CONTACT          CG_EXV           ELECT     TEMPERATURE          VOLUME
+ --------------- --------------- --------------- --------------- ---------------
+INFO:          0          0.0000      72652.1711      -4725.7892      77377.9603         10.5365      31481.1716     -13206.9573     -10249.0952      -9282.3817      -3572.4920          0.0000        103.9656          0.0000 1000000000.0000
+
+INFO:         10          0.1000      72522.5679      -7369.6942      79892.2621         10.1573      29350.3190     -13468.4614     -10373.8337      -9379.1890      -3601.6121          0.0000        103.0830        314.5723 1000000000.0000
+
+ 
+[STEP6] Deallocate Arrays
+ 
+Output_Time> Averaged timer profile (Min, Max)
+  total time      =       1.156
+    setup         =       1.116
+    dynamics      =       0.039
+      energy      =       0.013
+      integrator  =       0.006
+      migration   =       0.000
+      pairlist    =       0.013 (       0.006,       0.015)
+  energy           
+    bond          =       0.000 (       0.000,       0.000)
+    angle         =       0.000 (       0.000,       0.001)
+    dihedral      =       0.000 (       0.000,       0.002)
+    base stacking =       0.000 (       0.000,       0.000)
+    nonbond       =       0.004 (       0.003,       0.005)
+      CG exv      =       0.000 (       0.000,       0.000)
+      CG DNA bp   =       0.000 (       0.000,       0.000)
+      CG DNA exv  =       0.000 (       0.000,       0.000)
+      CG ele      =       0.000 (       0.000,       0.000)
+      CG PWMcos   =       0.000 (       0.000,       0.000)
+      CG PWMcosns =       0.000 (       0.000,       0.000)
+      CG IDR-HPS  =       0.003 (       0.003,       0.004)
+      CG IDR-KH   =       0.000 (       0.000,       0.000)
+      CG KH       =       0.000 (       0.000,       0.000)
+      Contact     =       0.000 (       0.000,       0.000)
+      pme real    =       0.000 (       0.000,       0.000)
+      pme recip   =       0.000 (       0.000,       0.000)
+    solvation     =       0.000 (       0.000,       0.000)
+      polar       =       0.000 (       0.000,       0.000)
+      non-polar   =       0.000 (       0.000,       0.000)
+    restraint     =       0.000 (       0.000,       0.000)
+    qmmm          =       0.000 (       0.000,       0.000)
+    morph         =       0.000 (       0.000,       0.000)
+  integrator       
+    constraint    =       0.000 (       0.000,       0.000)
+    update        =       0.000 (       0.000,       0.000)
+    comm_coord    =       0.002 (       0.001,       0.002)
+    comm_force    =       0.001 (       0.001,       0.002)
+  migration       =       0.000 (       0.000,       0.000)
+    comm_migrate  =       0.000 (       0.000,       0.000)
+    ptl_migrate   =       0.000 (       0.000,       0.000)
+    bond_migrate  =       0.000 (       0.000,       0.000)
+    angl_migrate  =       0.000 (       0.000,       0.000)
+    dihe_migrate  =       0.000 (       0.000,       0.000)
+    contact_migr  =       0.000 (       0.000,       0.000)
+    stack_migrate =       0.000 (       0.000,       0.000)
+    pwmcos_migrate =       0.000 (       0.000,       0.000)
+    pwmcosns_migr  =       0.000 (       0.000,       0.000)
+    nonb_update    =       0.005 (       0.004,       0.005)
+
