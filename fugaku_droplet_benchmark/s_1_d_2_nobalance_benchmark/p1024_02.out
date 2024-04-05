@@ -1,0 +1,1283 @@
+****************************************************
+*                                                  *
+*                  GENESIS CGDYN                   *
+*                                                  *
+*        A Molecular Dynamics Simulator with       *
+*           Spatial Decomposition Scheme           *
+*                                                  *
+*               Developed by RIKEN                 *
+*                                                  *
+****************************************************
+ 
+[STEP0] Architecture and Compiler Information
+ 
+GENESIS_Information> GENESIS Information
+  version      = 2.0.0
+  commit ID    = $GENESIS_VERSION$
+  precision    = mixed 
+  nonbonding   = CPU
+
+Build_Information> Compiler Information
+  build host   = a04014@fn01sv04
+  fortran      = frtpx: Fujitsu Fortran Compiler 4.9.0 tcsds-1.2.37
+  option       =  -m -Kocl -Kfast,openmp,parallel,simd=2,noalias -Nlst=t -Koptmsg=2 -Kopenmp  
+  C            = fccpx: Fujitsu C/C++ Compiler 4.9.0 tcsds-1.2.37
+  option       = -m -Kvisimpact -Kocl -Kswp -Kopenmp 
+  defined var. =  -DHAVE_MPI_GENESIS -DOMP -DFFTE -DLAPACK -DDSFMT_MEXP=19937 -DKCOMP
+  link option  = -SSL2BLAMP -Kparallel -Nfjomplib -Kopenmp    
+  MPI Compiler = FUJITSU MPI
+
+  exec. host   = u10176@k27-4109c
+  LD library   = /opt/FJSVxtclanga/tcsds-1.2.37/lib64
+ MPI Runtime = FUJITSU MPI Library 4.0.0 (4.0.1fj4.0.0)
+
+[STEP1] Read Control Parameters
+ 
+Read_Ctrl_Input> Input Files
+  grotopfile = ../rCG_Droplets_50_50_50_100_b100_f52_g20_d0_rho0.62.top
+  grocrdfile = ../crd/rCG_Droplets_50_50_50_100_b100_f52_g20_d0_rho0.62.gro
+  rstfile = ../_DROPLET_test_eq_s_1_d_2_01_02.rst
+ 
+Read_Ctrl_Output> Output Files
+  dcdfile    = p1024_02.dcd
+ 
+Read_Ctrl_Energy> Parameters of Energy Calculations
+  forcefield      =    RESIDCG
+  output_style    =    GENESIS
+ 
+Read_Ctrl_Dynamics> Parameters of MD simulation
+  integrator      =       VVER  nsteps          =      10000
+  timestep        =     0.0100  initial_time    =     0.0000
+  eneout_period   =       1000  rstout_period   =          0
+  crdout_period   =      10000  velout_period   =          0
+  nbupdate_period =         20  stoptr_period   =         10
+  lbupdate_period =          0
+  iseed           =         -1
+  annealing       =         no
+  verbose         =         no
+  target_md       =         no
+  steered_md      =         no
+ 
+Read_Ctrl_Ensemble> Parameters for Ensemble
+  ensemble        =        NVT
+  temperature     =    290.000
+  tpcontrol       =   LANGEVIN
+  gamma_t         =      0.010
+ 
+Read_Ctrl_Boundary> Parameters of Boundary Condition
+  type            =       PBC 
+  box_size(x,y,z) =   1418.000  1318.000  1545.000
+  min_domain_cell =          2
+  domain (x,y,z)  =         16         8         8
+ 
+Read_Ctrl_Selection> Parameters of Selection
+  # of groups     =          0
+  # of mole names =          0
+ 
+Read_Ctrl_Restraints> No restraint in the system
+
+Read_Ctrl_Fitting_MD> Parameters of Fitting
+  fitting method  =  TR+ROT   
+  fitting atom    = group1
+  mass_weight     =         no
+ 
+[STEP2] Setup MPI
+ 
+Setup_Mpi_Md> Summary of Setup MPI
+  number of MPI processes   =       1024
+  number of OpenMP threads  =         12
+  total number of CPU cores =      12288
+
+[STEP3] Set Relevant Variables and Structures
+ 
+Read_Grotop> Summary of Grotopfile
+  num_moltypes    =          1
+    tdp43                 :
+      num_atoms   =        154
+      num_bonds   =        153
+      num_angls   =         30
+      num_dihes   =         30
+      num_cmaps   =          0
+      num_excls   =          0
+      num_constrs =          0
+      num_pairs   =         20
+      num_vsites2 =          0
+      num_vsites3 =          0
+      num_vsites4 =          0
+      num_vsitesn =          0
+      num_posress =          0
+      num_PWMcos  =          0
+      num_PWMcosns=          0
+      num_IDR_HPS =          1
+      num_IDR_KH  =          0
+    .. not used molecule types were hidden.
+
+  num_molecules   =       1949
+    tdp43                 :  1949
+
+  num_atomtypes   =         37  num_bondtypes   =          0
+  num_angltypes   =          0  num_dihetypes   =          0
+  num_flangltypes           20
+  num_fldihetypes          400
+  num_constrtypes =          0  num_cmaptypes   =          0
+  num_nbonparms   =          0
+  num_basestacktypes  =     16
+  num_basepairtypes   =      4
+  num_basecrosstypes  =     32
+  num_cgdnaexvtypes   =      6
+  num_cgelemolpairs   =      1
+  num_cg_IDR_HPS_atomtypes  =     24
+  num_cg_KH_atomtypes  =    20
+
+  num_cg_pair_MJ_eps   =   400
+
+Read_Rst_Binary> Summary of RST file
+  num_atoms       =     300146  iseed           =  884345697
+  boxsize (x,y,z) =   1418.000  1318.000  1545.000
+
+Define_Molecule> Summary of molecules
+  num_atoms       =     300146  num_bonds       =     298197
+  num_angles      =      58470  num_dihedrals   =      58470
+  num_impropers   =          0  num_cmap_terms  =          0
+  num_residues    =     300146  num_molecules   =       1949
+  num_segments    =          1  num_deg_freedom =     900438
+  total_charge    =   5847.000
+ 
+Setup_Restart_Pre> Coordinates and velocities were replaced
+
+Setup_Boundary_Cell> Set Variables for Boundary Condition
+  domains (x,y,z) =         16         8         8
+  ncells (x,y,z)  =         32        48        64
+ 
+ test2
+ test3
+ num_atom, num_domain:  1 316 1792
+ num_atom, num_domain:  2 442 1672
+ num_atom, num_domain:  3 11 516
+ num_atom, num_domain:  4 0 0
+ num_atom, num_domain:  5 0 0
+ num_atom, num_domain:  6 0 0
+ num_atom, num_domain:  7 0 0
+ num_atom, num_domain:  8 0 0
+ num_atom, num_domain:  9 0 0
+ num_atom, num_domain:  10 0 0
+ num_atom, num_domain:  11 0 0
+ num_atom, num_domain:  12 0 0
+ num_atom, num_domain:  13 0 0
+ num_atom, num_domain:  14 0 0
+ num_atom, num_domain:  15 0 0
+ num_atom, num_domain:  16 2 519
+ num_atom, num_domain:  17 0 0
+ num_atom, num_domain:  18 0 0
+ num_atom, num_domain:  19 0 0
+ num_atom, num_domain:  20 0 0
+ num_atom, num_domain:  21 0 107
+ num_atom, num_domain:  22 0 152
+ num_atom, num_domain:  23 0 45
+ num_atom, num_domain:  24 0 0
+ num_atom, num_domain:  25 0 0
+ num_atom, num_domain:  26 0 0
+ num_atom, num_domain:  27 0 0
+ num_atom, num_domain:  28 0 0
+ num_atom, num_domain:  29 0 0
+ num_atom, num_domain:  30 0 0
+ num_atom, num_domain:  31 0 0
+ num_atom, num_domain:  32 0 0
+ num_atom, num_domain:  33 0 0
+ num_atom, num_domain:  34 0 0
+ num_atom, num_domain:  35 0 0
+ num_atom, num_domain:  36 0 0
+ num_atom, num_domain:  37 0 154
+ num_atom, num_domain:  38 0 257
+ num_atom, num_domain:  39 0 103
+ num_atom, num_domain:  40 0 0
+ num_atom, num_domain:  41 0 0
+ num_atom, num_domain:  42 0 0
+ num_atom, num_domain:  43 0 0
+ num_atom, num_domain:  44 0 0
+ num_atom, num_domain:  45 0 0
+ num_atom, num_domain:  46 0 0
+ num_atom, num_domain:  47 0 0
+ num_atom, num_domain:  48 0 0
+ num_atom, num_domain:  49 0 0
+ num_atom, num_domain:  50 0 0
+ num_atom, num_domain:  51 0 0
+ num_atom, num_domain:  52 0 0
+ num_atom, num_domain:  53 0 0
+ num_atom, num_domain:  54 0 0
+ num_atom, num_domain:  55 0 0
+ num_atom, num_domain:  56 0 0
+ num_atom, num_domain:  57 0 0
+ num_atom, num_domain:  58 0 0
+ num_atom, num_domain:  59 0 0
+ num_atom, num_domain:  60 0 0
+ num_atom, num_domain:  61 0 0
+ num_atom, num_domain:  62 0 0
+ num_atom, num_domain:  63 0 0
+ num_atom, num_domain:  64 0 0
+ num_atom, num_domain:  65 0 0
+ num_atom, num_domain:  66 0 0
+ num_atom, num_domain:  67 0 0
+ num_atom, num_domain:  68 0 0
+ num_atom, num_domain:  69 0 0
+ num_atom, num_domain:  70 0 0
+ num_atom, num_domain:  71 0 0
+ num_atom, num_domain:  72 0 0
+ num_atom, num_domain:  73 0 0
+ num_atom, num_domain:  74 0 0
+ num_atom, num_domain:  75 0 5
+ num_atom, num_domain:  76 0 52
+ num_atom, num_domain:  77 0 47
+ num_atom, num_domain:  78 0 0
+ num_atom, num_domain:  79 0 0
+ num_atom, num_domain:  80 0 0
+ num_atom, num_domain:  81 0 0
+ num_atom, num_domain:  82 0 0
+ num_atom, num_domain:  83 0 0
+ num_atom, num_domain:  84 0 0
+ num_atom, num_domain:  85 0 0
+ num_atom, num_domain:  86 0 0
+ num_atom, num_domain:  87 0 0
+ num_atom, num_domain:  88 0 0
+ num_atom, num_domain:  89 0 0
+ num_atom, num_domain:  90 0 170
+ num_atom, num_domain:  91 556 2452
+ num_atom, num_domain:  92 2241 4398
+ num_atom, num_domain:  93 1177 3737
+ num_atom, num_domain:  94 56 1057
+ num_atom, num_domain:  95 0 0
+ num_atom, num_domain:  96 0 0
+ num_atom, num_domain:  97 0 221
+ num_atom, num_domain:  98 2 273
+ num_atom, num_domain:  99 0 54
+ num_atom, num_domain:  100 0 0
+ num_atom, num_domain:  101 0 0
+ num_atom, num_domain:  102 0 0
+ num_atom, num_domain:  103 0 0
+ num_atom, num_domain:  104 0 0
+ num_atom, num_domain:  105 0 0
+ num_atom, num_domain:  106 0 110
+ num_atom, num_domain:  107 427 2202
+ num_atom, num_domain:  108 1388 4059
+ num_atom, num_domain:  109 849 3151
+ num_atom, num_domain:  110 38 1034
+ num_atom, num_domain:  111 0 0
+ num_atom, num_domain:  112 0 0
+ num_atom, num_domain:  113 2641 3446
+ num_atom, num_domain:  114 2784 3823
+ num_atom, num_domain:  115 185 1642
+ num_atom, num_domain:  116 0 0
+ num_atom, num_domain:  117 0 0
+ num_atom, num_domain:  118 0 0
+ num_atom, num_domain:  119 0 0
+ num_atom, num_domain:  120 0 0
+ num_atom, num_domain:  121 0 0
+ num_atom, num_domain:  122 0 0
+ num_atom, num_domain:  123 0 0
+ num_atom, num_domain:  124 0 0
+ num_atom, num_domain:  125 0 0
+ num_atom, num_domain:  126 0 0
+ num_atom, num_domain:  127 0 0
+ num_atom, num_domain:  128 127 1180
+ num_atom, num_domain:  129 0 0
+ num_atom, num_domain:  130 0 0
+ num_atom, num_domain:  131 0 0
+ num_atom, num_domain:  132 0 0
+ num_atom, num_domain:  133 0 37
+ num_atom, num_domain:  134 0 48
+ num_atom, num_domain:  135 0 11
+ num_atom, num_domain:  136 0 0
+ num_atom, num_domain:  137 0 0
+ num_atom, num_domain:  138 0 0
+ num_atom, num_domain:  139 0 0
+ num_atom, num_domain:  140 0 0
+ num_atom, num_domain:  141 0 0
+ num_atom, num_domain:  142 0 0
+ num_atom, num_domain:  143 0 0
+ num_atom, num_domain:  144 0 0
+ num_atom, num_domain:  145 0 0
+ num_atom, num_domain:  146 0 0
+ num_atom, num_domain:  147 0 0
+ num_atom, num_domain:  148 286 1934
+ num_atom, num_domain:  149 2958 5753
+ num_atom, num_domain:  150 4759 8429
+ num_atom, num_domain:  151 2822 5422
+ num_atom, num_domain:  152 64 1483
+ num_atom, num_domain:  153 0 0
+ num_atom, num_domain:  154 0 0
+ num_atom, num_domain:  155 0 0
+ num_atom, num_domain:  156 0 0
+ num_atom, num_domain:  157 0 0
+ num_atom, num_domain:  158 0 44
+ num_atom, num_domain:  159 0 44
+ num_atom, num_domain:  160 0 0
+ num_atom, num_domain:  161 0 355
+ num_atom, num_domain:  162 0 0
+ num_atom, num_domain:  163 0 0
+ num_atom, num_domain:  164 356 2498
+ num_atom, num_domain:  165 3968 6413
+ num_atom, num_domain:  166 6066 9080
+ num_atom, num_domain:  167 3599 6057
+ num_atom, num_domain:  168 88 1949
+ num_atom, num_domain:  169 0 0
+ num_atom, num_domain:  170 0 0
+ num_atom, num_domain:  171 0 0
+ num_atom, num_domain:  172 0 17
+ num_atom, num_domain:  173 65 1491
+ num_atom, num_domain:  174 1355 3775
+ num_atom, num_domain:  175 1348 4387
+ num_atom, num_domain:  176 469 2030
+ num_atom, num_domain:  177 49 1279
+ num_atom, num_domain:  178 0 0
+ num_atom, num_domain:  179 0 0
+ num_atom, num_domain:  180 0 10
+ num_atom, num_domain:  181 0 145
+ num_atom, num_domain:  182 0 304
+ num_atom, num_domain:  183 0 169
+ num_atom, num_domain:  184 0 0
+ num_atom, num_domain:  185 0 0
+ num_atom, num_domain:  186 0 0
+ num_atom, num_domain:  187 0 0
+ num_atom, num_domain:  188 0 39
+ num_atom, num_domain:  189 425 2362
+ num_atom, num_domain:  190 2978 6174
+ num_atom, num_domain:  191 4119 7324
+ num_atom, num_domain:  192 1858 4509
+ num_atom, num_domain:  193 0 341
+ num_atom, num_domain:  194 263 1000
+ num_atom, num_domain:  195 107 1063
+ num_atom, num_domain:  196 0 172
+ num_atom, num_domain:  197 0 0
+ num_atom, num_domain:  198 0 0
+ num_atom, num_domain:  199 0 0
+ num_atom, num_domain:  200 0 0
+ num_atom, num_domain:  201 0 0
+ num_atom, num_domain:  202 0 0
+ num_atom, num_domain:  203 0 178
+ num_atom, num_domain:  204 33 427
+ num_atom, num_domain:  205 0 408
+ num_atom, num_domain:  206 22 779
+ num_atom, num_domain:  207 149 1489
+ num_atom, num_domain:  208 56 983
+ num_atom, num_domain:  209 138 922
+ num_atom, num_domain:  210 1353 2717
+ num_atom, num_domain:  211 1025 2822
+ num_atom, num_domain:  212 12 825
+ num_atom, num_domain:  213 0 0
+ num_atom, num_domain:  214 0 0
+ num_atom, num_domain:  215 0 0
+ num_atom, num_domain:  216 0 0
+ num_atom, num_domain:  217 0 0
+ num_atom, num_domain:  218 19 1200
+ num_atom, num_domain:  219 3017 5829
+ num_atom, num_domain:  220 6340 10295
+ num_atom, num_domain:  221 5420 7218
+ num_atom, num_domain:  222 318 3312
+ num_atom, num_domain:  223 0 0
+ num_atom, num_domain:  224 0 0
+ num_atom, num_domain:  225 0 84
+ num_atom, num_domain:  226 4 207
+ num_atom, num_domain:  227 7 151
+ num_atom, num_domain:  228 0 31
+ num_atom, num_domain:  229 0 0
+ num_atom, num_domain:  230 0 0
+ num_atom, num_domain:  231 0 0
+ num_atom, num_domain:  232 0 0
+ num_atom, num_domain:  233 0 0
+ num_atom, num_domain:  234 10 1071
+ num_atom, num_domain:  235 2486 5013
+ num_atom, num_domain:  236 4996 8871
+ num_atom, num_domain:  237 3870 6398
+ num_atom, num_domain:  238 275 2544
+ num_atom, num_domain:  239 0 0
+ num_atom, num_domain:  240 0 0
+ num_atom, num_domain:  241 0 0
+ num_atom, num_domain:  242 0 0
+ num_atom, num_domain:  243 0 0
+ num_atom, num_domain:  244 0 0
+ num_atom, num_domain:  245 0 0
+ num_atom, num_domain:  246 0 0
+ num_atom, num_domain:  247 0 0
+ num_atom, num_domain:  248 0 0
+ num_atom, num_domain:  249 0 0
+ num_atom, num_domain:  250 0 0
+ num_atom, num_domain:  251 0 3
+ num_atom, num_domain:  252 0 5
+ num_atom, num_domain:  253 0 2
+ num_atom, num_domain:  254 0 0
+ num_atom, num_domain:  255 0 0
+ num_atom, num_domain:  256 0 0
+ num_atom, num_domain:  257 0 0
+ num_atom, num_domain:  258 0 0
+ num_atom, num_domain:  259 0 0
+ num_atom, num_domain:  260 0 0
+ num_atom, num_domain:  261 0 16
+ num_atom, num_domain:  262 0 28
+ num_atom, num_domain:  263 0 12
+ num_atom, num_domain:  264 0 0
+ num_atom, num_domain:  265 0 0
+ num_atom, num_domain:  266 0 0
+ num_atom, num_domain:  267 0 0
+ num_atom, num_domain:  268 0 0
+ num_atom, num_domain:  269 0 0
+ num_atom, num_domain:  270 0 0
+ num_atom, num_domain:  271 0 0
+ num_atom, num_domain:  272 0 0
+ num_atom, num_domain:  273 0 0
+ num_atom, num_domain:  274 0 0
+ num_atom, num_domain:  275 0 0
+ num_atom, num_domain:  276 212 1050
+ num_atom, num_domain:  277 1409 4001
+ num_atom, num_domain:  278 3056 5536
+ num_atom, num_domain:  279 1059 4014
+ num_atom, num_domain:  280 3 626
+ num_atom, num_domain:  281 0 0
+ num_atom, num_domain:  282 0 0
+ num_atom, num_domain:  283 0 0
+ num_atom, num_domain:  284 0 0
+ num_atom, num_domain:  285 0 6
+ num_atom, num_domain:  286 1 396
+ num_atom, num_domain:  287 12 461
+ num_atom, num_domain:  288 0 82
+ num_atom, num_domain:  289 26 1515
+ num_atom, num_domain:  290 0 0
+ num_atom, num_domain:  291 0 0
+ num_atom, num_domain:  292 84 1233
+ num_atom, num_domain:  293 1646 4441
+ num_atom, num_domain:  294 3536 6290
+ num_atom, num_domain:  295 1575 4434
+ num_atom, num_domain:  296 20 933
+ num_atom, num_domain:  297 0 0
+ num_atom, num_domain:  298 0 0
+ num_atom, num_domain:  299 0 0
+ num_atom, num_domain:  300 0 69
+ num_atom, num_domain:  301 1053 4872
+ num_atom, num_domain:  302 6358 10349
+ num_atom, num_domain:  303 7508 11514
+ num_atom, num_domain:  304 3169 6543
+ num_atom, num_domain:  305 777 4216
+ num_atom, num_domain:  306 0 4
+ num_atom, num_domain:  307 0 0
+ num_atom, num_domain:  308 0 10
+ num_atom, num_domain:  309 0 173
+ num_atom, num_domain:  310 10 276
+ num_atom, num_domain:  311 0 123
+ num_atom, num_domain:  312 0 0
+ num_atom, num_domain:  313 0 0
+ num_atom, num_domain:  314 0 0
+ num_atom, num_domain:  315 0 0
+ num_atom, num_domain:  316 0 189
+ num_atom, num_domain:  317 2521 7109
+ num_atom, num_domain:  318 9039 14761
+ num_atom, num_domain:  319 9354 18626
+ num_atom, num_domain:  320 7656 10954
+ num_atom, num_domain:  321 180 1900
+ num_atom, num_domain:  322 1929 3485
+ num_atom, num_domain:  323 1521 3565
+ num_atom, num_domain:  324 123 1310
+ num_atom, num_domain:  325 0 0
+ num_atom, num_domain:  326 0 0
+ num_atom, num_domain:  327 0 0
+ num_atom, num_domain:  328 0 0
+ num_atom, num_domain:  329 0 0
+ num_atom, num_domain:  330 0 0
+ num_atom, num_domain:  331 0 0
+ num_atom, num_domain:  332 0 0
+ num_atom, num_domain:  333 40 812
+ num_atom, num_domain:  334 607 3700
+ num_atom, num_domain:  335 2542 4035
+ num_atom, num_domain:  336 393 3048
+ num_atom, num_domain:  337 1985 4896
+ num_atom, num_domain:  338 7561 10032
+ num_atom, num_domain:  339 6952 8828
+ num_atom, num_domain:  340 941 3968
+ num_atom, num_domain:  341 0 0
+ num_atom, num_domain:  342 0 0
+ num_atom, num_domain:  343 0 0
+ num_atom, num_domain:  344 0 0
+ num_atom, num_domain:  345 0 0
+ num_atom, num_domain:  346 0 11
+ num_atom, num_domain:  347 44 570
+ num_atom, num_domain:  348 256 984
+ num_atom, num_domain:  349 34 644
+ num_atom, num_domain:  350 0 41
+ num_atom, num_domain:  351 0 0
+ num_atom, num_domain:  352 0 159
+ num_atom, num_domain:  353 46 964
+ num_atom, num_domain:  354 506 2132
+ num_atom, num_domain:  355 306 1755
+ num_atom, num_domain:  356 0 433
+ num_atom, num_domain:  357 0 0
+ num_atom, num_domain:  358 0 0
+ num_atom, num_domain:  359 0 0
+ num_atom, num_domain:  360 0 0
+ num_atom, num_domain:  361 0 0
+ num_atom, num_domain:  362 0 11
+ num_atom, num_domain:  363 4 345
+ num_atom, num_domain:  364 11 768
+ num_atom, num_domain:  365 15 447
+ num_atom, num_domain:  366 0 21
+ num_atom, num_domain:  367 0 0
+ num_atom, num_domain:  368 0 0
+ num_atom, num_domain:  369 0 0
+ num_atom, num_domain:  370 0 0
+ num_atom, num_domain:  371 0 0
+ num_atom, num_domain:  372 0 0
+ num_atom, num_domain:  373 0 0
+ num_atom, num_domain:  374 0 0
+ num_atom, num_domain:  375 0 0
+ num_atom, num_domain:  376 0 0
+ num_atom, num_domain:  377 0 0
+ num_atom, num_domain:  378 0 0
+ num_atom, num_domain:  379 0 0
+ num_atom, num_domain:  380 0 0
+ num_atom, num_domain:  381 0 0
+ num_atom, num_domain:  382 0 0
+ num_atom, num_domain:  383 0 0
+ num_atom, num_domain:  384 0 0
+ num_atom, num_domain:  385 644 2587
+ num_atom, num_domain:  386 1257 3462
+ num_atom, num_domain:  387 495 1767
+ num_atom, num_domain:  388 0 163
+ num_atom, num_domain:  389 0 0
+ num_atom, num_domain:  390 0 0
+ num_atom, num_domain:  391 0 0
+ num_atom, num_domain:  392 0 0
+ num_atom, num_domain:  393 0 0
+ num_atom, num_domain:  394 0 0
+ num_atom, num_domain:  395 0 0
+ num_atom, num_domain:  396 0 0
+ num_atom, num_domain:  397 0 0
+ num_atom, num_domain:  398 0 0
+ num_atom, num_domain:  399 0 0
+ num_atom, num_domain:  400 7 604
+ num_atom, num_domain:  401 0 0
+ num_atom, num_domain:  402 0 0
+ num_atom, num_domain:  403 0 0
+ num_atom, num_domain:  404 0 0
+ num_atom, num_domain:  405 0 0
+ num_atom, num_domain:  406 0 0
+ num_atom, num_domain:  407 0 0
+ num_atom, num_domain:  408 0 0
+ num_atom, num_domain:  409 0 2
+ num_atom, num_domain:  410 0 54
+ num_atom, num_domain:  411 0 57
+ num_atom, num_domain:  412 0 5
+ num_atom, num_domain:  413 0 0
+ num_atom, num_domain:  414 0 0
+ num_atom, num_domain:  415 0 0
+ num_atom, num_domain:  416 0 0
+ num_atom, num_domain:  417 0 7
+ num_atom, num_domain:  418 0 0
+ num_atom, num_domain:  419 0 0
+ num_atom, num_domain:  420 0 0
+ num_atom, num_domain:  421 0 0
+ num_atom, num_domain:  422 0 0
+ num_atom, num_domain:  423 0 0
+ num_atom, num_domain:  424 0 0
+ num_atom, num_domain:  425 0 12
+ num_atom, num_domain:  426 0 108
+ num_atom, num_domain:  427 0 101
+ num_atom, num_domain:  428 0 11
+ num_atom, num_domain:  429 3 735
+ num_atom, num_domain:  430 477 2152
+ num_atom, num_domain:  431 511 2196
+ num_atom, num_domain:  432 14 803
+ num_atom, num_domain:  433 2 124
+ num_atom, num_domain:  434 0 0
+ num_atom, num_domain:  435 0 0
+ num_atom, num_domain:  436 0 0
+ num_atom, num_domain:  437 0 0
+ num_atom, num_domain:  438 0 0
+ num_atom, num_domain:  439 0 0
+ num_atom, num_domain:  440 0 0
+ num_atom, num_domain:  441 0 0
+ num_atom, num_domain:  442 0 0
+ num_atom, num_domain:  443 0 0
+ num_atom, num_domain:  444 0 6
+ num_atom, num_domain:  445 31 1222
+ num_atom, num_domain:  446 809 3107
+ num_atom, num_domain:  447 994 3776
+ num_atom, num_domain:  448 351 1876
+ num_atom, num_domain:  449 0 2
+ num_atom, num_domain:  450 0 122
+ num_atom, num_domain:  451 0 145
+ num_atom, num_domain:  452 0 25
+ num_atom, num_domain:  453 0 0
+ num_atom, num_domain:  454 0 0
+ num_atom, num_domain:  455 0 0
+ num_atom, num_domain:  456 0 0
+ num_atom, num_domain:  457 0 0
+ num_atom, num_domain:  458 0 0
+ num_atom, num_domain:  459 0 0
+ num_atom, num_domain:  460 0 0
+ num_atom, num_domain:  461 0 0
+ num_atom, num_domain:  462 35 445
+ num_atom, num_domain:  463 122 662
+ num_atom, num_domain:  464 0 304
+ num_atom, num_domain:  465 20 402
+ num_atom, num_domain:  466 273 1006
+ num_atom, num_domain:  467 158 947
+ num_atom, num_domain:  468 0 248
+ num_atom, num_domain:  469 0 0
+ num_atom, num_domain:  470 0 0
+ num_atom, num_domain:  471 0 0
+ num_atom, num_domain:  472 0 0
+ num_atom, num_domain:  473 0 0
+ num_atom, num_domain:  474 0 0
+ num_atom, num_domain:  475 0 0
+ num_atom, num_domain:  476 0 0
+ num_atom, num_domain:  477 0 0
+ num_atom, num_domain:  478 0 0
+ num_atom, num_domain:  479 0 0
+ num_atom, num_domain:  480 0 0
+ num_atom, num_domain:  481 1 675
+ num_atom, num_domain:  482 122 1296
+ num_atom, num_domain:  483 64 736
+ num_atom, num_domain:  484 0 24
+ num_atom, num_domain:  485 0 0
+ num_atom, num_domain:  486 0 0
+ num_atom, num_domain:  487 0 0
+ num_atom, num_domain:  488 0 0
+ num_atom, num_domain:  489 0 0
+ num_atom, num_domain:  490 0 0
+ num_atom, num_domain:  491 0 0
+ num_atom, num_domain:  492 0 0
+ num_atom, num_domain:  493 0 0
+ num_atom, num_domain:  494 0 0
+ num_atom, num_domain:  495 0 0
+ num_atom, num_domain:  496 0 34
+ num_atom, num_domain:  497 2695 4503
+ num_atom, num_domain:  498 3876 6605
+ num_atom, num_domain:  499 1482 4101
+ num_atom, num_domain:  500 0 572
+ num_atom, num_domain:  501 0 0
+ num_atom, num_domain:  502 0 0
+ num_atom, num_domain:  503 0 0
+ num_atom, num_domain:  504 0 0
+ num_atom, num_domain:  505 0 0
+ num_atom, num_domain:  506 0 0
+ num_atom, num_domain:  507 0 0
+ num_atom, num_domain:  508 0 0
+ num_atom, num_domain:  509 0 0
+ num_atom, num_domain:  510 0 0
+ num_atom, num_domain:  511 0 0
+ num_atom, num_domain:  512 149 1579
+ num_atom, num_domain:  513 1493 3926
+ num_atom, num_domain:  514 2853 5125
+ num_atom, num_domain:  515 1042 3049
+ num_atom, num_domain:  516 0 448
+ num_atom, num_domain:  517 0 0
+ num_atom, num_domain:  518 0 0
+ num_atom, num_domain:  519 0 0
+ num_atom, num_domain:  520 0 225
+ num_atom, num_domain:  521 42 913
+ num_atom, num_domain:  522 90 1272
+ num_atom, num_domain:  523 13 752
+ num_atom, num_domain:  524 0 133
+ num_atom, num_domain:  525 0 0
+ num_atom, num_domain:  526 0 0
+ num_atom, num_domain:  527 0 0
+ num_atom, num_domain:  528 61 1023
+ num_atom, num_domain:  529 0 0
+ num_atom, num_domain:  530 0 0
+ num_atom, num_domain:  531 0 0
+ num_atom, num_domain:  532 0 0
+ num_atom, num_domain:  533 0 0
+ num_atom, num_domain:  534 0 0
+ num_atom, num_domain:  535 0 42
+ num_atom, num_domain:  536 656 3900
+ num_atom, num_domain:  537 5214 7981
+ num_atom, num_domain:  538 5999 11169
+ num_atom, num_domain:  539 4869 8357
+ num_atom, num_domain:  540 1029 3747
+ num_atom, num_domain:  541 0 37
+ num_atom, num_domain:  542 0 0
+ num_atom, num_domain:  543 0 0
+ num_atom, num_domain:  544 0 0
+ num_atom, num_domain:  545 0 0
+ num_atom, num_domain:  546 0 0
+ num_atom, num_domain:  547 0 0
+ num_atom, num_domain:  548 0 0
+ num_atom, num_domain:  549 0 0
+ num_atom, num_domain:  550 0 0
+ num_atom, num_domain:  551 0 25
+ num_atom, num_domain:  552 473 3439
+ num_atom, num_domain:  553 3677 7198
+ num_atom, num_domain:  554 6132 10108
+ num_atom, num_domain:  555 5467 8643
+ num_atom, num_domain:  556 1016 3928
+ num_atom, num_domain:  557 0 86
+ num_atom, num_domain:  558 0 0
+ num_atom, num_domain:  559 0 0
+ num_atom, num_domain:  560 0 0
+ num_atom, num_domain:  561 0 0
+ num_atom, num_domain:  562 0 0
+ num_atom, num_domain:  563 0 0
+ num_atom, num_domain:  564 0 0
+ num_atom, num_domain:  565 0 0
+ num_atom, num_domain:  566 0 0
+ num_atom, num_domain:  567 0 0
+ num_atom, num_domain:  568 0 16
+ num_atom, num_domain:  569 0 58
+ num_atom, num_domain:  570 29 592
+ num_atom, num_domain:  571 35 651
+ num_atom, num_domain:  572 0 107
+ num_atom, num_domain:  573 0 0
+ num_atom, num_domain:  574 0 0
+ num_atom, num_domain:  575 0 0
+ num_atom, num_domain:  576 0 0
+ num_atom, num_domain:  577 0 0
+ num_atom, num_domain:  578 0 0
+ num_atom, num_domain:  579 0 0
+ num_atom, num_domain:  580 0 0
+ num_atom, num_domain:  581 0 0
+ num_atom, num_domain:  582 0 0
+ num_atom, num_domain:  583 0 0
+ num_atom, num_domain:  584 0 0
+ num_atom, num_domain:  585 0 0
+ num_atom, num_domain:  586 0 0
+ num_atom, num_domain:  587 0 0
+ num_atom, num_domain:  588 0 0
+ num_atom, num_domain:  589 0 0
+ num_atom, num_domain:  590 0 0
+ num_atom, num_domain:  591 0 0
+ num_atom, num_domain:  592 0 0
+ num_atom, num_domain:  593 0 0
+ num_atom, num_domain:  594 0 0
+ num_atom, num_domain:  595 0 0
+ num_atom, num_domain:  596 0 0
+ num_atom, num_domain:  597 0 0
+ num_atom, num_domain:  598 0 0
+ num_atom, num_domain:  599 0 0
+ num_atom, num_domain:  600 0 0
+ num_atom, num_domain:  601 0 0
+ num_atom, num_domain:  602 0 0
+ num_atom, num_domain:  603 0 0
+ num_atom, num_domain:  604 0 0
+ num_atom, num_domain:  605 0 0
+ num_atom, num_domain:  606 0 0
+ num_atom, num_domain:  607 0 0
+ num_atom, num_domain:  608 0 0
+ num_atom, num_domain:  609 106 912
+ num_atom, num_domain:  610 273 1842
+ num_atom, num_domain:  611 116 1063
+ num_atom, num_domain:  612 0 33
+ num_atom, num_domain:  613 0 0
+ num_atom, num_domain:  614 0 0
+ num_atom, num_domain:  615 0 0
+ num_atom, num_domain:  616 0 0
+ num_atom, num_domain:  617 0 0
+ num_atom, num_domain:  618 0 0
+ num_atom, num_domain:  619 0 0
+ num_atom, num_domain:  620 0 0
+ num_atom, num_domain:  621 0 0
+ num_atom, num_domain:  622 0 0
+ num_atom, num_domain:  623 0 0
+ num_atom, num_domain:  624 0 49
+ num_atom, num_domain:  625 5072 6721
+ num_atom, num_domain:  626 6862 10304
+ num_atom, num_domain:  627 3431 6201
+ num_atom, num_domain:  628 69 1186
+ num_atom, num_domain:  629 0 0
+ num_atom, num_domain:  630 0 0
+ num_atom, num_domain:  631 0 0
+ num_atom, num_domain:  632 0 0
+ num_atom, num_domain:  633 0 0
+ num_atom, num_domain:  634 0 0
+ num_atom, num_domain:  635 0 0
+ num_atom, num_domain:  636 0 0
+ num_atom, num_domain:  637 0 0
+ num_atom, num_domain:  638 0 0
+ num_atom, num_domain:  639 0 0
+ num_atom, num_domain:  640 170 2834
+ num_atom, num_domain:  641 0 9
+ num_atom, num_domain:  642 0 9
+ num_atom, num_domain:  643 0 0
+ num_atom, num_domain:  644 0 0
+ num_atom, num_domain:  645 0 31
+ num_atom, num_domain:  646 0 31
+ num_atom, num_domain:  647 0 0
+ num_atom, num_domain:  648 0 176
+ num_atom, num_domain:  649 32 1016
+ num_atom, num_domain:  650 378 1658
+ num_atom, num_domain:  651 73 1226
+ num_atom, num_domain:  652 0 135
+ num_atom, num_domain:  653 0 0
+ num_atom, num_domain:  654 0 0
+ num_atom, num_domain:  655 0 0
+ num_atom, num_domain:  656 0 0
+ num_atom, num_domain:  657 0 0
+ num_atom, num_domain:  658 0 0
+ num_atom, num_domain:  659 0 4
+ num_atom, num_domain:  660 26 434
+ num_atom, num_domain:  661 206 1031
+ num_atom, num_domain:  662 87 695
+ num_atom, num_domain:  663 0 36
+ num_atom, num_domain:  664 373 3826
+ num_atom, num_domain:  665 4537 7853
+ num_atom, num_domain:  666 6089 10616
+ num_atom, num_domain:  667 4531 8050
+ num_atom, num_domain:  668 675 3435
+ num_atom, num_domain:  669 0 8
+ num_atom, num_domain:  670 0 0
+ num_atom, num_domain:  671 0 0
+ num_atom, num_domain:  672 0 0
+ num_atom, num_domain:  673 0 0
+ num_atom, num_domain:  674 0 0
+ num_atom, num_domain:  675 0 0
+ num_atom, num_domain:  676 0 116
+ num_atom, num_domain:  677 3 307
+ num_atom, num_domain:  678 0 194
+ num_atom, num_domain:  679 0 19
+ num_atom, num_domain:  680 770 2962
+ num_atom, num_domain:  681 3422 7340
+ num_atom, num_domain:  682 5293 9503
+ num_atom, num_domain:  683 3862 7384
+ num_atom, num_domain:  684 341 3173
+ num_atom, num_domain:  685 0 15
+ num_atom, num_domain:  686 0 0
+ num_atom, num_domain:  687 0 0
+ num_atom, num_domain:  688 0 0
+ num_atom, num_domain:  689 0 0
+ num_atom, num_domain:  690 0 0
+ num_atom, num_domain:  691 0 0
+ num_atom, num_domain:  692 0 0
+ num_atom, num_domain:  693 0 0
+ num_atom, num_domain:  694 0 0
+ num_atom, num_domain:  695 0 0
+ num_atom, num_domain:  696 0 0
+ num_atom, num_domain:  697 0 38
+ num_atom, num_domain:  698 11 460
+ num_atom, num_domain:  699 14 490
+ num_atom, num_domain:  700 0 71
+ num_atom, num_domain:  701 0 0
+ num_atom, num_domain:  702 0 0
+ num_atom, num_domain:  703 0 0
+ num_atom, num_domain:  704 0 0
+ num_atom, num_domain:  705 0 0
+ num_atom, num_domain:  706 0 0
+ num_atom, num_domain:  707 0 0
+ num_atom, num_domain:  708 0 0
+ num_atom, num_domain:  709 0 0
+ num_atom, num_domain:  710 0 0
+ num_atom, num_domain:  711 0 0
+ num_atom, num_domain:  712 0 0
+ num_atom, num_domain:  713 0 0
+ num_atom, num_domain:  714 0 0
+ num_atom, num_domain:  715 0 0
+ num_atom, num_domain:  716 0 0
+ num_atom, num_domain:  717 0 0
+ num_atom, num_domain:  718 0 0
+ num_atom, num_domain:  719 0 0
+ num_atom, num_domain:  720 0 0
+ num_atom, num_domain:  721 0 0
+ num_atom, num_domain:  722 0 0
+ num_atom, num_domain:  723 2 241
+ num_atom, num_domain:  724 39 259
+ num_atom, num_domain:  725 0 55
+ num_atom, num_domain:  726 0 0
+ num_atom, num_domain:  727 0 0
+ num_atom, num_domain:  728 0 0
+ num_atom, num_domain:  729 0 0
+ num_atom, num_domain:  730 0 0
+ num_atom, num_domain:  731 0 0
+ num_atom, num_domain:  732 0 0
+ num_atom, num_domain:  733 0 0
+ num_atom, num_domain:  734 0 0
+ num_atom, num_domain:  735 0 0
+ num_atom, num_domain:  736 0 0
+ num_atom, num_domain:  737 0 106
+ num_atom, num_domain:  738 0 0
+ num_atom, num_domain:  739 56 270
+ num_atom, num_domain:  740 87 299
+ num_atom, num_domain:  741 0 60
+ num_atom, num_domain:  742 0 0
+ num_atom, num_domain:  743 0 0
+ num_atom, num_domain:  744 0 0
+ num_atom, num_domain:  745 0 0
+ num_atom, num_domain:  746 0 0
+ num_atom, num_domain:  747 0 0
+ num_atom, num_domain:  748 0 0
+ num_atom, num_domain:  749 0 0
+ num_atom, num_domain:  750 23 529
+ num_atom, num_domain:  751 753 1344
+ num_atom, num_domain:  752 324 1327
+ num_atom, num_domain:  753 0 50
+ num_atom, num_domain:  754 0 99
+ num_atom, num_domain:  755 0 58
+ num_atom, num_domain:  756 0 0
+ num_atom, num_domain:  757 0 0
+ num_atom, num_domain:  758 0 0
+ num_atom, num_domain:  759 0 0
+ num_atom, num_domain:  760 0 0
+ num_atom, num_domain:  761 0 0
+ num_atom, num_domain:  762 0 0
+ num_atom, num_domain:  763 0 0
+ num_atom, num_domain:  764 0 0
+ num_atom, num_domain:  765 0 0
+ num_atom, num_domain:  766 24 176
+ num_atom, num_domain:  767 103 786
+ num_atom, num_domain:  768 57 641
+ num_atom, num_domain:  769 0 0
+ num_atom, num_domain:  770 0 0
+ num_atom, num_domain:  771 0 45
+ num_atom, num_domain:  772 53 814
+ num_atom, num_domain:  773 317 1277
+ num_atom, num_domain:  774 49 751
+ num_atom, num_domain:  775 0 28
+ num_atom, num_domain:  776 0 0
+ num_atom, num_domain:  777 0 0
+ num_atom, num_domain:  778 0 0
+ num_atom, num_domain:  779 0 0
+ num_atom, num_domain:  780 0 0
+ num_atom, num_domain:  781 0 104
+ num_atom, num_domain:  782 163 386
+ num_atom, num_domain:  783 41 404
+ num_atom, num_domain:  784 0 0
+ num_atom, num_domain:  785 0 0
+ num_atom, num_domain:  786 0 0
+ num_atom, num_domain:  787 2 962
+ num_atom, num_domain:  788 3804 4994
+ num_atom, num_domain:  789 7171 9483
+ num_atom, num_domain:  790 4397 6008
+ num_atom, num_domain:  791 147 1438
+ num_atom, num_domain:  792 0 0
+ num_atom, num_domain:  793 0 29
+ num_atom, num_domain:  794 0 61
+ num_atom, num_domain:  795 0 32
+ num_atom, num_domain:  796 0 0
+ num_atom, num_domain:  797 0 0
+ num_atom, num_domain:  798 0 11
+ num_atom, num_domain:  799 0 11
+ num_atom, num_domain:  800 0 0
+ num_atom, num_domain:  801 0 0
+ num_atom, num_domain:  802 0 0
+ num_atom, num_domain:  803 0 244
+ num_atom, num_domain:  804 613 2078
+ num_atom, num_domain:  805 1646 3494
+ num_atom, num_domain:  806 573 2387
+ num_atom, num_domain:  807 1 266
+ num_atom, num_domain:  808 0 0
+ num_atom, num_domain:  809 0 35
+ num_atom, num_domain:  810 0 65
+ num_atom, num_domain:  811 0 30
+ num_atom, num_domain:  812 0 0
+ num_atom, num_domain:  813 0 0
+ num_atom, num_domain:  814 0 0
+ num_atom, num_domain:  815 0 0
+ num_atom, num_domain:  816 0 0
+ num_atom, num_domain:  817 0 0
+ num_atom, num_domain:  818 0 0
+ num_atom, num_domain:  819 0 0
+ num_atom, num_domain:  820 0 0
+ num_atom, num_domain:  821 0 0
+ num_atom, num_domain:  822 0 0
+ num_atom, num_domain:  823 0 0
+ num_atom, num_domain:  824 0 0
+ num_atom, num_domain:  825 0 0
+ num_atom, num_domain:  826 0 0
+ num_atom, num_domain:  827 0 0
+ num_atom, num_domain:  828 0 0
+ num_atom, num_domain:  829 0 0
+ num_atom, num_domain:  830 0 0
+ num_atom, num_domain:  831 0 0
+ num_atom, num_domain:  832 0 0
+ num_atom, num_domain:  833 0 0
+ num_atom, num_domain:  834 0 0
+ num_atom, num_domain:  835 0 0
+ num_atom, num_domain:  836 0 0
+ num_atom, num_domain:  837 0 0
+ num_atom, num_domain:  838 0 0
+ num_atom, num_domain:  839 0 0
+ num_atom, num_domain:  840 0 0
+ num_atom, num_domain:  841 0 0
+ num_atom, num_domain:  842 0 0
+ num_atom, num_domain:  843 0 0
+ num_atom, num_domain:  844 0 0
+ num_atom, num_domain:  845 0 0
+ num_atom, num_domain:  846 0 0
+ num_atom, num_domain:  847 0 0
+ num_atom, num_domain:  848 0 0
+ num_atom, num_domain:  849 0 0
+ num_atom, num_domain:  850 0 0
+ num_atom, num_domain:  851 29 479
+ num_atom, num_domain:  852 275 334
+ num_atom, num_domain:  853 0 101
+ num_atom, num_domain:  854 0 0
+ num_atom, num_domain:  855 0 0
+ num_atom, num_domain:  856 0 0
+ num_atom, num_domain:  857 0 0
+ num_atom, num_domain:  858 0 0
+ num_atom, num_domain:  859 0 0
+ num_atom, num_domain:  860 0 0
+ num_atom, num_domain:  861 0 0
+ num_atom, num_domain:  862 0 0
+ num_atom, num_domain:  863 0 0
+ num_atom, num_domain:  864 0 0
+ num_atom, num_domain:  865 0 294
+ num_atom, num_domain:  866 0 0
+ num_atom, num_domain:  867 54 475
+ num_atom, num_domain:  868 228 397
+ num_atom, num_domain:  869 0 96
+ num_atom, num_domain:  870 0 0
+ num_atom, num_domain:  871 0 0
+ num_atom, num_domain:  872 0 0
+ num_atom, num_domain:  873 0 0
+ num_atom, num_domain:  874 0 0
+ num_atom, num_domain:  875 0 0
+ num_atom, num_domain:  876 0 0
+ num_atom, num_domain:  877 0 0
+ num_atom, num_domain:  878 126 1138
+ num_atom, num_domain:  879 1921 2291
+ num_atom, num_domain:  880 874 2368
+ num_atom, num_domain:  881 0 159
+ num_atom, num_domain:  882 0 0
+ num_atom, num_domain:  883 0 0
+ num_atom, num_domain:  884 0 0
+ num_atom, num_domain:  885 0 0
+ num_atom, num_domain:  886 0 0
+ num_atom, num_domain:  887 0 0
+ num_atom, num_domain:  888 0 0
+ num_atom, num_domain:  889 0 0
+ num_atom, num_domain:  890 0 0
+ num_atom, num_domain:  891 0 0
+ num_atom, num_domain:  892 0 0
+ num_atom, num_domain:  893 0 0
+ num_atom, num_domain:  894 65 549
+ num_atom, num_domain:  895 678 1670
+ num_atom, num_domain:  896 596 1297
+ num_atom, num_domain:  897 286 1473
+ num_atom, num_domain:  898 544 1394
+ num_atom, num_domain:  899 17 509
+ num_atom, num_domain:  900 0 60
+ num_atom, num_domain:  901 1 131
+ num_atom, num_domain:  902 0 72
+ num_atom, num_domain:  903 0 0
+ num_atom, num_domain:  904 0 0
+ num_atom, num_domain:  905 0 0
+ num_atom, num_domain:  906 0 0
+ num_atom, num_domain:  907 0 0
+ num_atom, num_domain:  908 0 0
+ num_atom, num_domain:  909 0 157
+ num_atom, num_domain:  910 420 342
+ num_atom, num_domain:  911 146 459
+ num_atom, num_domain:  912 0 347
+ num_atom, num_domain:  913 0 0
+ num_atom, num_domain:  914 0 0
+ num_atom, num_domain:  915 0 62
+ num_atom, num_domain:  916 313 1252
+ num_atom, num_domain:  917 942 2272
+ num_atom, num_domain:  918 428 1502
+ num_atom, num_domain:  919 0 219
+ num_atom, num_domain:  920 0 0
+ num_atom, num_domain:  921 0 0
+ num_atom, num_domain:  922 0 0
+ num_atom, num_domain:  923 0 0
+ num_atom, num_domain:  924 0 0
+ num_atom, num_domain:  925 0 0
+ num_atom, num_domain:  926 0 13
+ num_atom, num_domain:  927 0 13
+ num_atom, num_domain:  928 0 0
+ num_atom, num_domain:  929 0 0
+ num_atom, num_domain:  930 0 0
+ num_atom, num_domain:  931 0 0
+ num_atom, num_domain:  932 18 296
+ num_atom, num_domain:  933 90 626
+ num_atom, num_domain:  934 57 373
+ num_atom, num_domain:  935 0 28
+ num_atom, num_domain:  936 0 0
+ num_atom, num_domain:  937 0 0
+ num_atom, num_domain:  938 0 0
+ num_atom, num_domain:  939 0 0
+ num_atom, num_domain:  940 0 0
+ num_atom, num_domain:  941 0 0
+ num_atom, num_domain:  942 0 0
+ num_atom, num_domain:  943 0 0
+ num_atom, num_domain:  944 0 0
+ num_atom, num_domain:  945 0 0
+ num_atom, num_domain:  946 0 0
+ num_atom, num_domain:  947 0 0
+ num_atom, num_domain:  948 0 0
+ num_atom, num_domain:  949 0 0
+ num_atom, num_domain:  950 0 0
+ num_atom, num_domain:  951 0 0
+ num_atom, num_domain:  952 0 0
+ num_atom, num_domain:  953 0 0
+ num_atom, num_domain:  954 0 0
+ num_atom, num_domain:  955 0 0
+ num_atom, num_domain:  956 0 0
+ num_atom, num_domain:  957 0 0
+ num_atom, num_domain:  958 0 0
+ num_atom, num_domain:  959 0 0
+ num_atom, num_domain:  960 0 0
+ num_atom, num_domain:  961 0 0
+ num_atom, num_domain:  962 0 0
+ num_atom, num_domain:  963 0 0
+ num_atom, num_domain:  964 0 0
+ num_atom, num_domain:  965 0 0
+ num_atom, num_domain:  966 0 0
+ num_atom, num_domain:  967 0 0
+ num_atom, num_domain:  968 0 0
+ num_atom, num_domain:  969 0 0
+ num_atom, num_domain:  970 0 0
+ num_atom, num_domain:  971 0 0
+ num_atom, num_domain:  972 0 0
+ num_atom, num_domain:  973 0 0
+ num_atom, num_domain:  974 0 0
+ num_atom, num_domain:  975 0 0
+ num_atom, num_domain:  976 0 0
+ num_atom, num_domain:  977 0 0
+ num_atom, num_domain:  978 0 0
+ num_atom, num_domain:  979 0 0
+ num_atom, num_domain:  980 0 0
+ num_atom, num_domain:  981 0 0
+ num_atom, num_domain:  982 0 0
+ num_atom, num_domain:  983 0 0
+ num_atom, num_domain:  984 0 0
+ num_atom, num_domain:  985 0 0
+ num_atom, num_domain:  986 0 0
+ num_atom, num_domain:  987 0 0
+ num_atom, num_domain:  988 0 0
+ num_atom, num_domain:  989 0 0
+ num_atom, num_domain:  990 0 0
+ num_atom, num_domain:  991 0 0
+ num_atom, num_domain:  992 0 0
+ num_atom, num_domain:  993 0 112
+ num_atom, num_domain:  994 0 161
+ num_atom, num_domain:  995 0 49
+ num_atom, num_domain:  996 0 0
+ num_atom, num_domain:  997 0 0
+ num_atom, num_domain:  998 0 0
+ num_atom, num_domain:  999 0 0
+ num_atom, num_domain:  1000 0 0
+ num_atom, num_domain:  1001 0 0
+ num_atom, num_domain:  1002 0 0
+ num_atom, num_domain:  1003 0 0
+ num_atom, num_domain:  1004 0 0
+ num_atom, num_domain:  1005 0 0
+ num_atom, num_domain:  1006 0 0
+ num_atom, num_domain:  1007 0 0
+ num_atom, num_domain:  1008 0 0
+ num_atom, num_domain:  1009 1328 2961
+ num_atom, num_domain:  1010 1679 3280
+ num_atom, num_domain:  1011 63 1298
+ num_atom, num_domain:  1012 0 0
+ num_atom, num_domain:  1013 0 0
+ num_atom, num_domain:  1014 0 0
+ num_atom, num_domain:  1015 0 0
+ num_atom, num_domain:  1016 0 0
+ num_atom, num_domain:  1017 0 0
+ num_atom, num_domain:  1018 0 0
+ num_atom, num_domain:  1019 0 0
+ num_atom, num_domain:  1020 0 0
+ num_atom, num_domain:  1021 0 0
+ num_atom, num_domain:  1022 0 0
+ num_atom, num_domain:  1023 0 0
+ num_atom, num_domain:  1024 45 646
+ minimum(domain,boundary), maximum(domain_boundary):  0 0 9354 18626
+Define_Enefunc_Gromacs> Number of Interactions in Each Term
+  bond_ene        =     298197  angle_ene       =      25337
+  flex_angle_ene  =      33133
+  torsion_ene     =      58470
+ restraint_groups =          0 restraint_funcs  =          0
+ 
+Setup_Dynamics> Subtract 3 translational degrees of freedom
+ 
+Update_Num_Deg_Freedom> Number of degrees of freedom was updated
+  num_deg_freedom =     900435 (After removing translation)
+ 
+Random_Init> Initialize the random number
+  seed            = 520718
+
+Setup_Fitting_cgdyn> NO fitting is applied, skip
+  fitting method  =  NO
+ 
+Setup_Restart_Post> Read random seed  from RST file and Overwrite it
+
+Random_Mpi_Frombyte> MPI communicator size was changed from previous run.
+                     skip read random internal state of restart file.
+Setup_Restart_Post> Parameters were replaced
+
+[STEP4] Compute Single Point Energy for Molecules
+ 
+            STEP          ENERGY            BOND           ANGLE        DIHEDRAL  NATIVE_CONTACT NON-NATIVE_CONT           ELECT         IDR_HPS          CG_EXV
+ --------------- --------------- --------------- --------------- ---------------
+               0    -109768.5498      85650.5777     -59220.8296     -46942.5665     -15874.0549          0.0000       -722.7624     -72658.9140          0.0000
+
+[STEP5] Perform Molecular Dynamics Simulation
+ 
+INFO:       STEP            TIME       TOTAL_ENE   POTENTIAL_ENE     KINETIC_ENE            RMSG            BOND           ANGLE        DIHEDRAL         IDR_HPS  NATIVE_CONTACT          CG_EXV           ELECT     TEMPERATURE          VOLUME
+ --------------- --------------- --------------- --------------- ---------------
+INFO:       1000         10.0000     142926.6015    -107719.8064     250646.4079          9.3920      85600.3144     -58692.1510     -46670.0377     -71417.0534     -15815.9568          0.0000       -724.9220        285.4006 2887487580.0000
+
+INFO:       2000         20.0000     143937.1651    -107021.8867     250959.0518          9.3888      85655.3361     -58618.7089     -46474.5002     -71073.7838     -15787.4313          0.0000       -722.7987        285.8411 2887487580.0000
+
+INFO:       3000         30.0000     144492.9580    -106667.6282     251160.5862          9.3792      85428.7085     -58475.6973     -46338.7847     -70844.7239     -15719.9250          0.0000       -717.2058        285.9899 2887487580.0000
+
+INFO:       4000         40.0000     145116.1538    -106057.1571     251173.3109          9.3817      85397.8070     -58494.4939     -46110.5033     -70459.5729     -15672.3803          0.0000       -718.0138        286.0832 2887487580.0000
+
+INFO:       5000         50.0000     145957.7784    -105245.2224     251203.0008          9.3943      85709.7194     -58513.4138     -46002.2057     -70059.5175     -15655.8052          0.0000       -723.9996        286.2126 2887487580.0000
+
+INFO:       6000         60.0000     146446.5602    -104672.0278     251118.5880          9.3847      85670.9507     -58537.6551     -46013.9522     -69440.7581     -15636.6532          0.0000       -713.9598        285.9723 2887487580.0000
+
+INFO:       7000         70.0000     147365.8951    -103839.7149     251205.6100          9.4178      86145.4158     -58406.8548     -45920.0558     -69306.6697     -15625.5440          0.0000       -726.0064        285.9605 2887487580.0000
+
+INFO:       8000         80.0000     148397.4959    -103742.4522     252139.9480          9.3922      85742.9094     -58453.9524     -45847.5087     -68834.3327     -15623.5136          0.0000       -726.0542        287.2647 2887487580.0000
+
+INFO:       9000         90.0000     148881.0276    -103281.5640     252162.5916          9.3902      85732.8078     -58249.3307     -45835.4527     -68604.1966     -15594.1618          0.0000       -731.2301        287.1505 2887487580.0000
+
+INFO:      10000        100.0000     149890.0096    -102583.4030     252473.4126          9.4149      86129.3020     -58326.6918     -45701.4959     -68386.6494     -15579.3248          0.0000       -718.5431        287.5175 2887487580.0000
+
+ 
+[STEP6] Deallocate Arrays
+ 
+Output_Time> Averaged timer profile (Min, Max)
+  total time      =     126.059
+    setup         =       8.522
+    dynamics      =     117.537
+      energy      =      86.541
+      integrator  =      20.724
+      migration   =       4.429
+      pairlist    =       0.440 (       0.114,      15.641)
+  energy           
+    bond          =       0.041 (       0.016,       0.897)
+    angle         =       0.078 (       0.052,       0.892)
+    dihedral      =       0.082 (       0.048,       1.125)
+    base stacking =       0.000 (       0.000,       0.000)
+    nonbond       =       0.999 (       0.049,      30.287)
+      CG exv      =       0.600 (       0.010,      16.873)
+      CG DNA bp   =       0.000 (       0.000,       0.000)
+      CG DNA exv  =       0.000 (       0.000,       0.000)
+      CG ele      =       0.072 (       0.011,       1.967)
+      CG PWMcos   =       0.000 (       0.000,       0.000)
+      CG PWMcosns =       0.000 (       0.000,       0.000)
+      CG IDR-HPS  =       0.303 (       0.009,      11.309)
+      CG IDR-KH   =       0.000 (       0.000,       0.000)
+      CG KH       =       0.000 (       0.000,       0.000)
+      Contact     =       0.020 (       0.016,       0.137)
+      pme real    =       0.000 (       0.000,       0.000)
+      pme recip   =       0.000 (       0.000,       0.000)
+    solvation     =       0.000 (       0.000,       0.000)
+      polar       =       0.000 (       0.000,       0.000)
+      non-polar   =       0.000 (       0.000,       0.000)
+    restraint     =       0.000 (       0.000,       0.000)
+    qmmm          =       0.000 (       0.000,       0.000)
+    morph         =       0.000 (       0.000,       0.000)
+  integrator       
+    constraint    =       0.000 (       0.000,       0.000)
+    update        =       1.787 (       0.100,      53.068)
+    comm_coord    =      17.228 (       1.189,      66.255)
+    comm_force    =       1.639 (       1.169,       4.632)
+  migration       =       4.429 (       4.429,       4.431)
+    comm_migrate  =       1.221 (       0.486,       1.328)
+    ptl_migrate   =       0.013 (       0.002,       0.349)
+    bond_migrate  =       0.002 (       0.001,       0.039)
+    angl_migrate  =       0.006 (       0.001,       0.069)
+    dihe_migrate  =       0.002 (       0.001,       0.012)
+    contact_migr  =       0.001 (       0.000,       0.034)
+    stack_migrate =       0.000 (       0.000,       0.000)
+    pwmcos_migrate =       0.000 (       0.000,       0.000)
+    pwmcosns_migr  =       0.000 (       0.000,       0.000)
+    nonb_update    =       3.053 (       2.909,       5.809)
+

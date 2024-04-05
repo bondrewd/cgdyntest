@@ -1,0 +1,515 @@
+****************************************************
+*                                                  *
+*                  GENESIS CGDYN                   *
+*                                                  *
+*        A Molecular Dynamics Simulator with       *
+*           Spatial Decomposition Scheme           *
+*                                                  *
+*               Developed by RIKEN                 *
+*                                                  *
+****************************************************
+ 
+[STEP0] Architecture and Compiler Information
+ 
+GENESIS_Information> GENESIS Information
+  version      = 2.0.0
+  commit ID    = $GENESIS_VERSION$
+  precision    = mixed 
+  nonbonding   = CPU
+
+Build_Information> Compiler Information
+  build host   = a04014@fn01sv04
+  fortran      = frtpx: Fujitsu Fortran Compiler 4.9.0 tcsds-1.2.37
+  option       =  -m -Kocl -Kfast,openmp,parallel,simd=2,noalias -Nlst=t -Koptmsg=2 -Kopenmp  
+  C            = fccpx: Fujitsu C/C++ Compiler 4.9.0 tcsds-1.2.37
+  option       = -m -Kvisimpact -Kocl -Kswp -Kopenmp 
+  defined var. =  -DHAVE_MPI_GENESIS -DOMP -DFFTE -DLAPACK -DDSFMT_MEXP=19937 -DKCOMP
+  link option  = -SSL2BLAMP -Kparallel -Nfjomplib -Kopenmp    
+  MPI Compiler = FUJITSU MPI
+
+  exec. host   = u10176@h28-7202g
+  LD library   = /opt/FJSVxtclanga/tcsds-1.2.37/lib64
+ MPI Runtime = FUJITSU MPI Library 4.0.0 (4.0.1fj4.0.0)
+
+[STEP1] Read Control Parameters
+ 
+Read_Ctrl_Input> Input Files
+  grotopfile = ../rCG_Droplets_50_50_50_100_b100_f52_g20_d0_rho0.62.top
+  grocrdfile = ../crd/rCG_Droplets_50_50_50_100_b100_f52_g20_d0_rho0.62.gro
+  rstfile = ../_DROPLET_test_eq_s_1_d_2_01_02.rst
+ 
+Read_Ctrl_Output> Output Files
+  dcdfile    = p256_04.dcd
+ 
+Read_Ctrl_Energy> Parameters of Energy Calculations
+  forcefield      =    RESIDCG
+  output_style    =    GENESIS
+ 
+Read_Ctrl_Dynamics> Parameters of MD simulation
+  integrator      =       VVER  nsteps          =      10000
+  timestep        =     0.0100  initial_time    =     0.0000
+  eneout_period   =       1000  rstout_period   =          0
+  crdout_period   =      10000  velout_period   =          0
+  nbupdate_period =         20  stoptr_period   =         10
+  lbupdate_period =          0
+  iseed           =         -1
+  annealing       =         no
+  verbose         =         no
+  target_md       =         no
+  steered_md      =         no
+ 
+Read_Ctrl_Ensemble> Parameters for Ensemble
+  ensemble        =        NVT
+  temperature     =    290.000
+  tpcontrol       =   LANGEVIN
+  gamma_t         =      0.010
+ 
+Read_Ctrl_Boundary> Parameters of Boundary Condition
+  type            =       PBC 
+  box_size(x,y,z) =   1418.000  1318.000  1545.000
+  min_domain_cell =          2
+  domain (x,y,z)  =          8         8         4
+ 
+Read_Ctrl_Selection> Parameters of Selection
+  # of groups     =          0
+  # of mole names =          0
+ 
+Read_Ctrl_Restraints> No restraint in the system
+
+Read_Ctrl_Fitting_MD> Parameters of Fitting
+  fitting method  =  TR+ROT   
+  fitting atom    = group1
+  mass_weight     =         no
+ 
+[STEP2] Setup MPI
+ 
+Setup_Mpi_Md> Summary of Setup MPI
+  number of MPI processes   =        256
+  number of OpenMP threads  =         12
+  total number of CPU cores =       3072
+
+[STEP3] Set Relevant Variables and Structures
+ 
+Read_Grotop> Summary of Grotopfile
+  num_moltypes    =          1
+    tdp43                 :
+      num_atoms   =        154
+      num_bonds   =        153
+      num_angls   =         30
+      num_dihes   =         30
+      num_cmaps   =          0
+      num_excls   =          0
+      num_constrs =          0
+      num_pairs   =         20
+      num_vsites2 =          0
+      num_vsites3 =          0
+      num_vsites4 =          0
+      num_vsitesn =          0
+      num_posress =          0
+      num_PWMcos  =          0
+      num_PWMcosns=          0
+      num_IDR_HPS =          1
+      num_IDR_KH  =          0
+    .. not used molecule types were hidden.
+
+  num_molecules   =       1949
+    tdp43                 :  1949
+
+  num_atomtypes   =         37  num_bondtypes   =          0
+  num_angltypes   =          0  num_dihetypes   =          0
+  num_flangltypes           20
+  num_fldihetypes          400
+  num_constrtypes =          0  num_cmaptypes   =          0
+  num_nbonparms   =          0
+  num_basestacktypes  =     16
+  num_basepairtypes   =      4
+  num_basecrosstypes  =     32
+  num_cgdnaexvtypes   =      6
+  num_cgelemolpairs   =      1
+  num_cg_IDR_HPS_atomtypes  =     24
+  num_cg_KH_atomtypes  =    20
+
+  num_cg_pair_MJ_eps   =   400
+
+Read_Rst_Binary> Summary of RST file
+  num_atoms       =     300146  iseed           =  884345697
+  boxsize (x,y,z) =   1418.000  1318.000  1545.000
+
+Define_Molecule> Summary of molecules
+  num_atoms       =     300146  num_bonds       =     298197
+  num_angles      =      58470  num_dihedrals   =      58470
+  num_impropers   =          0  num_cmap_terms  =          0
+  num_residues    =     300146  num_molecules   =       1949
+  num_segments    =          1  num_deg_freedom =     900438
+  total_charge    =   5847.000
+ 
+Setup_Restart_Pre> Coordinates and velocities were replaced
+
+Setup_Boundary_Cell> Set Variables for Boundary Condition
+  domains (x,y,z) =          8         8         4
+  ncells (x,y,z)  =         48        48        64
+ 
+ test2
+ test3
+ num_atom, num_domain:  1 758 1877
+ num_atom, num_domain:  2 11 349
+ num_atom, num_domain:  3 0 48
+ num_atom, num_domain:  4 0 0
+ num_atom, num_domain:  5 0 0
+ num_atom, num_domain:  6 0 0
+ num_atom, num_domain:  7 0 0
+ num_atom, num_domain:  8 2 308
+ num_atom, num_domain:  9 0 0
+ num_atom, num_domain:  10 286 1289
+ num_atom, num_domain:  11 7717 6798
+ num_atom, num_domain:  12 2886 4060
+ num_atom, num_domain:  13 0 0
+ num_atom, num_domain:  14 0 0
+ num_atom, num_domain:  15 0 37
+ num_atom, num_domain:  16 0 44
+ num_atom, num_domain:  17 0 141
+ num_atom, num_domain:  18 356 1598
+ num_atom, num_domain:  19 10034 7003
+ num_atom, num_domain:  20 3687 4477
+ num_atom, num_domain:  21 0 0
+ num_atom, num_domain:  22 0 4
+ num_atom, num_domain:  23 1420 3113
+ num_atom, num_domain:  24 1817 3712
+ num_atom, num_domain:  25 49 732
+ num_atom, num_domain:  26 0 0
+ num_atom, num_domain:  27 0 314
+ num_atom, num_domain:  28 0 111
+ num_atom, num_domain:  29 0 0
+ num_atom, num_domain:  30 0 6
+ num_atom, num_domain:  31 3403 4760
+ num_atom, num_domain:  32 5977 5922
+ num_atom, num_domain:  33 263 922
+ num_atom, num_domain:  34 107 843
+ num_atom, num_domain:  35 0 0
+ num_atom, num_domain:  36 0 0
+ num_atom, num_domain:  37 0 0
+ num_atom, num_domain:  38 33 415
+ num_atom, num_domain:  39 22 826
+ num_atom, num_domain:  40 205 1470
+ num_atom, num_domain:  41 1491 2263
+ num_atom, num_domain:  42 1037 2231
+ num_atom, num_domain:  43 0 0
+ num_atom, num_domain:  44 0 0
+ num_atom, num_domain:  45 19 592
+ num_atom, num_domain:  46 12154 6668
+ num_atom, num_domain:  47 6971 5574
+ num_atom, num_domain:  48 0 0
+ num_atom, num_domain:  49 6 460
+ num_atom, num_domain:  50 7 145
+ num_atom, num_domain:  51 0 0
+ num_atom, num_domain:  52 0 0
+ num_atom, num_domain:  53 10 499
+ num_atom, num_domain:  54 9297 6128
+ num_atom, num_domain:  55 5032 4934
+ num_atom, num_domain:  56 0 0
+ num_atom, num_domain:  57 5425 2489
+ num_atom, num_domain:  58 185 1037
+ num_atom, num_domain:  59 0 0
+ num_atom, num_domain:  60 0 0
+ num_atom, num_domain:  61 0 0
+ num_atom, num_domain:  62 0 5
+ num_atom, num_domain:  63 0 0
+ num_atom, num_domain:  64 127 659
+ num_atom, num_domain:  65 1901 3218
+ num_atom, num_domain:  66 495 1318
+ num_atom, num_domain:  67 0 28
+ num_atom, num_domain:  68 0 0
+ num_atom, num_domain:  69 0 0
+ num_atom, num_domain:  70 0 0
+ num_atom, num_domain:  71 0 0
+ num_atom, num_domain:  72 7 359
+ num_atom, num_domain:  73 0 0
+ num_atom, num_domain:  74 212 721
+ num_atom, num_domain:  75 4465 4947
+ num_atom, num_domain:  76 1062 3047
+ num_atom, num_domain:  77 0 29
+ num_atom, num_domain:  78 0 57
+ num_atom, num_domain:  79 1 270
+ num_atom, num_domain:  80 12 456
+ num_atom, num_domain:  81 26 801
+ num_atom, num_domain:  82 84 778
+ num_atom, num_domain:  83 5182 5453
+ num_atom, num_domain:  84 1595 3366
+ num_atom, num_domain:  85 0 83
+ num_atom, num_domain:  86 0 83
+ num_atom, num_domain:  87 7891 7264
+ num_atom, num_domain:  88 11202 7927
+ num_atom, num_domain:  89 779 2491
+ num_atom, num_domain:  90 0 0
+ num_atom, num_domain:  91 10 286
+ num_atom, num_domain:  92 0 63
+ num_atom, num_domain:  93 0 0
+ num_atom, num_domain:  94 0 8
+ num_atom, num_domain:  95 12400 9321
+ num_atom, num_domain:  96 18355 13070
+ num_atom, num_domain:  97 2109 2945
+ num_atom, num_domain:  98 1644 2782
+ num_atom, num_domain:  99 0 0
+ num_atom, num_domain:  100 0 0
+ num_atom, num_domain:  101 0 0
+ num_atom, num_domain:  102 0 0
+ num_atom, num_domain:  103 682 2817
+ num_atom, num_domain:  104 3057 3652
+ num_atom, num_domain:  105 9839 6322
+ num_atom, num_domain:  106 8051 5895
+ num_atom, num_domain:  107 0 0
+ num_atom, num_domain:  108 0 0
+ num_atom, num_domain:  109 0 0
+ num_atom, num_domain:  110 300 808
+ num_atom, num_domain:  111 34 502
+ num_atom, num_domain:  112 0 7
+ num_atom, num_domain:  113 675 2996
+ num_atom, num_domain:  114 370 1976
+ num_atom, num_domain:  115 0 0
+ num_atom, num_domain:  116 0 0
+ num_atom, num_domain:  117 0 0
+ num_atom, num_domain:  118 15 688
+ num_atom, num_domain:  119 15 349
+ num_atom, num_domain:  120 0 10
+ num_atom, num_domain:  121 6571 5051
+ num_atom, num_domain:  122 1482 2991
+ num_atom, num_domain:  123 0 0
+ num_atom, num_domain:  124 0 0
+ num_atom, num_domain:  125 0 0
+ num_atom, num_domain:  126 0 0
+ num_atom, num_domain:  127 0 0
+ num_atom, num_domain:  128 149 926
+ num_atom, num_domain:  129 4346 4400
+ num_atom, num_domain:  130 1042 2166
+ num_atom, num_domain:  131 0 31
+ num_atom, num_domain:  132 0 97
+ num_atom, num_domain:  133 542 2222
+ num_atom, num_domain:  134 86 1129
+ num_atom, num_domain:  135 0 0
+ num_atom, num_domain:  136 61 554
+ num_atom, num_domain:  137 0 0
+ num_atom, num_domain:  138 26 386
+ num_atom, num_domain:  139 293 929
+ num_atom, num_domain:  140 1029 3728
+ num_atom, num_domain:  141 21839 11176
+ num_atom, num_domain:  142 11104 7842
+ num_atom, num_domain:  143 0 0
+ num_atom, num_domain:  144 0 0
+ num_atom, num_domain:  145 0 0
+ num_atom, num_domain:  146 0 111
+ num_atom, num_domain:  147 3 302
+ num_atom, num_domain:  148 1243 3131
+ num_atom, num_domain:  149 18524 11020
+ num_atom, num_domain:  150 10686 8225
+ num_atom, num_domain:  151 0 2
+ num_atom, num_domain:  152 0 0
+ num_atom, num_domain:  153 0 0
+ num_atom, num_domain:  154 0 0
+ num_atom, num_domain:  155 0 0
+ num_atom, num_domain:  156 0 8
+ num_atom, num_domain:  157 40 740
+ num_atom, num_domain:  158 49 737
+ num_atom, num_domain:  159 0 0
+ num_atom, num_domain:  160 0 0
+ num_atom, num_domain:  161 0 0
+ num_atom, num_domain:  162 0 0
+ num_atom, num_domain:  163 0 0
+ num_atom, num_domain:  164 0 0
+ num_atom, num_domain:  165 0 0
+ num_atom, num_domain:  166 0 0
+ num_atom, num_domain:  167 0 0
+ num_atom, num_domain:  168 0 0
+ num_atom, num_domain:  169 0 0
+ num_atom, num_domain:  170 41 257
+ num_atom, num_domain:  171 0 16
+ num_atom, num_domain:  172 0 0
+ num_atom, num_domain:  173 0 0
+ num_atom, num_domain:  174 0 0
+ num_atom, num_domain:  175 0 0
+ num_atom, num_domain:  176 0 0
+ num_atom, num_domain:  177 379 1721
+ num_atom, num_domain:  178 259 1183
+ num_atom, num_domain:  179 0 16
+ num_atom, num_domain:  180 0 0
+ num_atom, num_domain:  181 0 0
+ num_atom, num_domain:  182 0 0
+ num_atom, num_domain:  183 23 311
+ num_atom, num_domain:  184 1077 1137
+ num_atom, num_domain:  185 11934 7388
+ num_atom, num_domain:  186 3500 4482
+ num_atom, num_domain:  187 0 0
+ num_atom, num_domain:  188 0 0
+ num_atom, num_domain:  189 0 0
+ num_atom, num_domain:  190 0 0
+ num_atom, num_domain:  191 24 127
+ num_atom, num_domain:  192 330 2455
+ num_atom, num_domain:  193 830 1455
+ num_atom, num_domain:  194 70 941
+ num_atom, num_domain:  195 367 1210
+ num_atom, num_domain:  196 0 3
+ num_atom, num_domain:  197 0 0
+ num_atom, num_domain:  198 0 0
+ num_atom, num_domain:  199 583 161
+ num_atom, num_domain:  200 187 431
+ num_atom, num_domain:  201 0 0
+ num_atom, num_domain:  202 4119 3517
+ num_atom, num_domain:  203 12938 5105
+ num_atom, num_domain:  204 147 707
+ num_atom, num_domain:  205 0 61
+ num_atom, num_domain:  206 0 19
+ num_atom, num_domain:  207 0 13
+ num_atom, num_domain:  208 0 11
+ num_atom, num_domain:  209 0 0
+ num_atom, num_domain:  210 631 1619
+ num_atom, num_domain:  211 2366 2902
+ num_atom, num_domain:  212 1 95
+ num_atom, num_domain:  213 0 65
+ num_atom, num_domain:  214 0 19
+ num_atom, num_domain:  215 0 0
+ num_atom, num_domain:  216 0 0
+ num_atom, num_domain:  217 0 0
+ num_atom, num_domain:  218 0 0
+ num_atom, num_domain:  219 0 0
+ num_atom, num_domain:  220 0 0
+ num_atom, num_domain:  221 0 0
+ num_atom, num_domain:  222 0 0
+ num_atom, num_domain:  223 0 0
+ num_atom, num_domain:  224 0 0
+ num_atom, num_domain:  225 0 0
+ num_atom, num_domain:  226 0 0
+ num_atom, num_domain:  227 0 0
+ num_atom, num_domain:  228 0 0
+ num_atom, num_domain:  229 0 0
+ num_atom, num_domain:  230 0 0
+ num_atom, num_domain:  231 0 0
+ num_atom, num_domain:  232 0 0
+ num_atom, num_domain:  233 0 0
+ num_atom, num_domain:  234 304 305
+ num_atom, num_domain:  235 0 20
+ num_atom, num_domain:  236 0 0
+ num_atom, num_domain:  237 0 0
+ num_atom, num_domain:  238 0 0
+ num_atom, num_domain:  239 0 0
+ num_atom, num_domain:  240 0 0
+ num_atom, num_domain:  241 0 212
+ num_atom, num_domain:  242 282 369
+ num_atom, num_domain:  243 0 20
+ num_atom, num_domain:  244 0 0
+ num_atom, num_domain:  245 0 0
+ num_atom, num_domain:  246 0 0
+ num_atom, num_domain:  247 126 676
+ num_atom, num_domain:  248 2795 1711
+ num_atom, num_domain:  249 3007 2659
+ num_atom, num_domain:  250 63 807
+ num_atom, num_domain:  251 0 0
+ num_atom, num_domain:  252 0 0
+ num_atom, num_domain:  253 0 0
+ num_atom, num_domain:  254 0 0
+ num_atom, num_domain:  255 65 382
+ num_atom, num_domain:  256 1319 1592
+ minimum(domain,boundary), maximum(domain_boundary):  0 0 21839 13070
+Define_Enefunc_Gromacs> Number of Interactions in Each Term
+  bond_ene        =     298197  angle_ene       =      25337
+  flex_angle_ene  =      33133
+  torsion_ene     =      58470
+ restraint_groups =          0 restraint_funcs  =          0
+ 
+Setup_Dynamics> Subtract 3 translational degrees of freedom
+ 
+Update_Num_Deg_Freedom> Number of degrees of freedom was updated
+  num_deg_freedom =     900435 (After removing translation)
+ 
+Random_Init> Initialize the random number
+  seed            = 923310
+
+Setup_Fitting_cgdyn> NO fitting is applied, skip
+  fitting method  =  NO
+ 
+Setup_Restart_Post> Read random seed  from RST file and Overwrite it
+
+Random_Mpi_Frombyte> MPI communicator size was changed from previous run.
+                     skip read random internal state of restart file.
+Setup_Restart_Post> Parameters were replaced
+
+[STEP4] Compute Single Point Energy for Molecules
+ 
+            STEP          ENERGY            BOND           ANGLE        DIHEDRAL  NATIVE_CONTACT NON-NATIVE_CONT           ELECT         IDR_HPS          CG_EXV
+ --------------- --------------- --------------- --------------- ---------------
+               0    -109768.5527      85650.5767     -59220.8314     -46942.5668     -15874.0546          0.0000       -722.7624     -72658.9142          0.0000
+
+[STEP5] Perform Molecular Dynamics Simulation
+ 
+INFO:       STEP            TIME       TOTAL_ENE   POTENTIAL_ENE     KINETIC_ENE            RMSG            BOND           ANGLE        DIHEDRAL         IDR_HPS  NATIVE_CONTACT          CG_EXV           ELECT     TEMPERATURE          VOLUME
+ --------------- --------------- --------------- --------------- ---------------
+INFO:       1000         10.0000     142910.7139    -107461.3292     250372.0431          9.4087      85910.7153     -58723.0800     -46685.5538     -71426.9710     -15823.0721          0.0000       -713.3675        285.2360 2887487580.0000
+
+INFO:       2000         20.0000     143575.0837    -107544.0993     251119.1829          9.3764      85311.9843     -58778.1081     -46515.7249     -71076.4321     -15769.3330          0.0000       -716.4855        285.9404 2887487580.0000
+
+INFO:       3000         30.0000     144609.7647    -106175.2938     250785.0585          9.4101      85778.1821     -58667.7568     -46163.3877     -70719.5589     -15665.3482          0.0000       -737.4242        285.6315 2887487580.0000
+
+INFO:       4000         40.0000     145257.0519    -105862.6897     251119.7416          9.3832      85477.3962     -58410.6769     -46159.7452     -70356.8229     -15694.2133          0.0000       -718.6276        285.9909 2887487580.0000
+
+INFO:       5000         50.0000     145773.1440    -105436.4226     251209.5666          9.4046      85756.7053     -58547.7451     -46082.8992     -70132.8237     -15704.0536          0.0000       -725.6062        286.1186 2887487580.0000
+
+INFO:       6000         60.0000     146197.6128    -105178.4125     251376.0253          9.3780      85367.1773     -58348.6468     -46252.6521     -69548.3457     -15671.1903          0.0000       -724.7549        286.2879 2887487580.0000
+
+INFO:       7000         70.0000     146858.4561    -104417.3084     251275.7645          9.3821      85350.9752     -58437.5781     -45903.2148     -69054.4568     -15645.2763          0.0000       -727.7576        286.1652 2887487580.0000
+
+INFO:       8000         80.0000     147801.0908    -103798.5279     251599.6187          9.4013      85688.0158     -58420.1058     -45933.9317     -68797.1811     -15613.7807          0.0000       -721.5444        286.4428 2887487580.0000
+
+INFO:       9000         90.0000     148551.7825    -103371.8089     251923.5914          9.4037      85803.7341     -58420.8944     -45857.2769     -68551.1609     -15611.3298          0.0000       -734.8809        286.8992 2887487580.0000
+
+INFO:      10000        100.0000     149189.7103    -103112.7456     252302.4559          9.4004      85761.9966     -58421.0335     -45946.9483     -68158.2409     -15611.0532          0.0000       -737.4664        287.3323 2887487580.0000
+
+ 
+[STEP6] Deallocate Arrays
+ 
+Output_Time> Averaged timer profile (Min, Max)
+  total time      =     233.186
+    setup         =      13.220
+    dynamics      =     219.965
+      energy      =     130.406
+      integrator  =      70.478
+      migration   =       6.139
+      pairlist    =       1.186 (       0.161,      23.160)
+  energy           
+    bond          =       0.112 (       0.015,       2.087)
+    angle         =       0.149 (       0.048,       2.000)
+    dihedral      =       0.173 (       0.044,       2.576)
+    base stacking =       0.000 (       0.000,       0.000)
+    nonbond       =       2.784 (       0.046,      48.174)
+      CG exv      =       1.403 (       0.009,      20.288)
+      CG DNA bp   =       0.000 (       0.000,       0.000)
+      CG DNA exv  =       0.000 (       0.000,       0.000)
+      CG ele      =       0.195 (       0.010,       3.457)
+      CG PWMcos   =       0.000 (       0.000,       0.000)
+      CG PWMcosns =       0.000 (       0.000,       0.000)
+      CG IDR-HPS  =       1.152 (       0.009,      24.118)
+      CG IDR-KH   =       0.000 (       0.000,       0.000)
+      CG KH       =       0.000 (       0.000,       0.000)
+      Contact     =       0.031 (       0.015,       0.304)
+      pme real    =       0.000 (       0.000,       0.000)
+      pme recip   =       0.000 (       0.000,       0.000)
+    solvation     =       0.000 (       0.000,       0.000)
+      polar       =       0.000 (       0.000,       0.000)
+      non-polar   =       0.000 (       0.000,       0.000)
+    restraint     =       0.000 (       0.000,       0.000)
+    qmmm          =       0.000 (       0.000,       0.000)
+    morph         =       0.000 (       0.000,       0.000)
+  integrator       
+    constraint    =       0.000 (       0.000,       0.000)
+    update        =       6.724 (       0.168,     124.242)
+    comm_coord    =      62.013 (       1.495,     137.648)
+    comm_force    =       1.664 (       1.116,       3.355)
+  migration       =       6.139 (       6.139,       6.141)
+    comm_migrate  =       1.522 (       0.426,       1.668)
+    ptl_migrate   =       0.047 (       0.003,       0.807)
+    bond_migrate  =       0.005 (       0.001,       0.082)
+    angl_migrate  =       0.013 (       0.001,       0.074)
+    dihe_migrate  =       0.003 (       0.001,       0.023)
+    contact_migr  =       0.003 (       0.000,       0.041)
+    stack_migrate =       0.000 (       0.000,       0.000)
+    pwmcos_migrate =       0.000 (       0.000,       0.000)
+    pwmcosns_migr  =       0.000 (       0.000,       0.000)
+    nonb_update    =       4.477 (       4.173,       8.373)
+
