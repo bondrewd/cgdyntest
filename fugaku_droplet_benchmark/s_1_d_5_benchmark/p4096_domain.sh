@@ -18,4 +18,4 @@ export PLE_MPI_STD_EMPTYFILE=off
 export bindir=/home/ra000003/data/jung/program/genesis-mkl-private_domain/src/cgdyn
 llio_transfer ${bindir}/cgdyn
 
-mpiexec sh -c 'if [ ${PMIX_RANK} == 0 ]; then ${bindir}/cgdyn p4096_domain.inp > p4096_domain.out; else ${bindir}/cgdyn p4096_domain.inp; fi'
+mpiexec sh -c 'if [ ${PMIX_RANK} == 0 ]; then ${bindir}/cgdyn p4096.inp > p4096_domain.out; else ${bindir}/cgdyn p4096.inp; fi'
