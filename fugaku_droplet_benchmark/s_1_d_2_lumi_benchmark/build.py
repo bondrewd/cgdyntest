@@ -158,6 +158,7 @@ class Configuration:
     boundary: typing.Optional[BoundaryBlock] = None
     domains: typing.List[tuple[int, int, int]] = dataclasses.field(default_factory=list)
     job_time: typing.Optional[str] = None
+    job_bin: typing.Optional[str] = None
 
     def to_string(self):
         string = ""
@@ -228,6 +229,7 @@ class Job:
         gpus_per_node: int,
         compiler: Compiler,
         job_time: str,
+        job_bin: str,
         nruns: int = 5,
     ):
         self.inp_idx = inp_idx
@@ -238,6 +240,7 @@ class Job:
         self.gpus_per_node = gpus_per_node
         self.compiler = compiler
         self.job_time = job_time
+        self.job_bin = job_bin
         self.nruns = nruns
 
     def to_string(self):
@@ -290,11 +293,11 @@ class Job:
         string += 'export SLURM_CPU_BIND="${CPU_BIND}"\n'
         string += "\n"
         string += "# Warm up\n"
-        string += f'srun "$(pwd)/../../src/spdyn/spdyn" {self.inp_idx:04}.INP\n'
+        string += f"srun {self.job_bin} {self.inp_idx:04}.INP\n"
         string += "\n"
         string += "# Benchmark\n"
         for i in range(self.nruns):
-            string += f'srun "$(pwd)/../../src/spdyn/spdyn" {self.inp_idx:04}.INP 2>&1 | tee {self.inp_idx:04}-{self.job_idx:04}-{self.nodes:04}-{self.ntasks_per_node:04}-{self.cpus_per_task:04}-{self.gpus_per_node:04}-{i:04}.OUT\n'
+            string += f"srun {self.job_bin} {self.inp_idx:04}.INP 2>&1 | tee {self.inp_idx:04}-{self.job_idx:04}-{self.nodes:04}-{self.ntasks_per_node:04}-{self.cpus_per_task:04}-{self.gpus_per_node:04}-{i:04}.OUT\n"
 
         return string
 
@@ -355,6 +358,7 @@ SYSTEM_CONFIGURATIONS = {
             (4, 4, 4),
         ],
         job_time="01:00:00",
+        job_bin="$(pwd)/../../src/spdyn/spdyn",
     ),
     System.DHFR: Configuration(
         input=InputBlock(
@@ -409,6 +413,7 @@ SYSTEM_CONFIGURATIONS = {
             (4, 4, 4),
         ],
         job_time="01:00:00",
+        job_bin="$(pwd)/../../src/spdyn/spdyn",
     ),
     System.UUN: Configuration(
         input=InputBlock(
@@ -475,6 +480,7 @@ SYSTEM_CONFIGURATIONS = {
             (8, 8, 8),
         ],
         job_time="03:00:00",
+        job_bin="$(pwd)/../../src/spdyn/spdyn",
     ),
     System.TDP43: Configuration(
         input=InputBlock(
@@ -529,6 +535,7 @@ SYSTEM_CONFIGURATIONS = {
             (16, 16, 16),
         ],
         job_time="00:30:00",
+        job_bin="./cgdyn",
     ),
 }
 
@@ -665,6 +672,7 @@ def main():
 
     for cfg_idx, configuration in enumerate(configurations):
         assert configuration.job_time is not None
+        assert configuration.job_bin is not None
 
         with open(f"{cfg_idx:04}.INP", "w") as file:
             file.write(configuration.to_string())
@@ -699,6 +707,7 @@ def main():
                     gpus_per_node,
                     compiler,
                     configuration.job_time,
+                    configuration.job_bin,
                 )
             )
 
