@@ -1,1 +1,3 @@
 cgdyn
+*.SLURM
+*.INP
