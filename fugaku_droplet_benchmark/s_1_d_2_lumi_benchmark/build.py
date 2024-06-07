@@ -9,6 +9,7 @@ class System(enum.Enum):
     APOA1 = "APOA1"
     DHFR = "DHFR"
     UUN = "UUN"
+    TDP43 = "TDP43"
 
 
 class YN(enum.Enum):
@@ -156,12 +157,13 @@ class Configuration:
     ensemble: typing.Optional[EnsembleBlock] = None
     boundary: typing.Optional[BoundaryBlock] = None
     domains: typing.List[tuple[int, int, int]] = dataclasses.field(default_factory=list)
+    job_time: typing.Optional[str] = None
 
     def to_string(self):
         string = ""
         for field in dataclasses.fields(self):
             block = getattr(self, field.name)
-            if not isinstance(block, list):
+            if isinstance(block, BlockFunctions):
                 string += f"{block.to_string()}\n"
         return string
 
@@ -225,6 +227,7 @@ class Job:
         cpus_per_task: int,
         gpus_per_node: int,
         compiler: Compiler,
+        job_time: str,
         nruns: int = 5,
     ):
         self.inp_idx = inp_idx
@@ -234,6 +237,7 @@ class Job:
         self.cpus_per_task = cpus_per_task
         self.gpus_per_node = gpus_per_node
         self.compiler = compiler
+        self.job_time = job_time
         self.nruns = nruns
 
     def to_string(self):
@@ -241,7 +245,7 @@ class Job:
         string += "#!/bin/bash -e\n"
         string += f"#SBATCH --job-name={self.inp_idx:04}-{self.job_idx:04}\n"
         string += "#SBATCH --account=Project_462000123\n"
-        string += "#SBATCH --time=03:00:00\n"
+        string += f"#SBATCH --time={self.job_time}\n"
         string += "#SBATCH --partition=standard-g\n"
         string += "#SBATCH --mem=0\n"
         string += f"#SBATCH --nodes={self.nodes}\n"
@@ -350,6 +354,7 @@ SYSTEM_CONFIGURATIONS = {
             # 64
             (4, 4, 4),
         ],
+        job_time="01:00:00",
     ),
     System.DHFR: Configuration(
         input=InputBlock(
@@ -403,6 +408,7 @@ SYSTEM_CONFIGURATIONS = {
             # 64
             (4, 4, 4),
         ],
+        job_time="01:00:00",
     ),
     System.UUN: Configuration(
         input=InputBlock(
@@ -468,6 +474,61 @@ SYSTEM_CONFIGURATIONS = {
             # 512
             (8, 8, 8),
         ],
+        job_time="03:00:00",
+    ),
+    System.TDP43: Configuration(
+        input=InputBlock(
+            grotopfile="../rCG_Droplets_50_50_50_100_b100_f52_g20_d0_rho0.62.top",
+            grocrdfile="../crd/rCG_Droplets_50_50_50_100_b100_f52_g20_d0_rho0.62.gro",
+            rstfile="../_DROPLET_test_eq_s_1_d_2_01_02.rst",
+        ),
+        energy=EnergyBlock(
+            forcefield=Forcefield.RESIDCG,
+            electrostatic=Electrostatic.CUTOFF,
+            cg_cutoffdist_ele=35,
+            cg_cutoffdist_126=20,
+            cg_pairlistdist_ele=38,
+            cg_pairlistdist_126=23,
+            cg_IDR_HPS_epsilon=0.2,
+        ),
+        dynamics=DynamicsBlock(
+            integrator=Integrator.VVER,
+            nsteps=10000,
+            timestep=0.010,
+            eneout_period=1000,
+            nbupdate_period=20,
+        ),
+        constraints=ConstraintsBlock(
+            rigid_bond=YN.NO,
+        ),
+        ensemble=EnsembleBlock(
+            ensemble=Ensemble.NVT,
+            tpcontrol=TPControl.LANGEVIN,
+            temperature=290.0,
+            gamma_t=0.01,
+        ),
+        boundary=BoundaryBlock(type=BoundaryType.PBC),
+        domains=[
+            # 8
+            (2, 2, 2),
+            # 16
+            (4, 2, 2),
+            # 32
+            (4, 4, 2),
+            # 64
+            (4, 4, 4),
+            # 256
+            (8, 8, 4),
+            # 512
+            (8, 8, 8),
+            # 1024
+            (16, 8, 8),
+            # 2048
+            (16, 16, 8),
+            # 4096
+            (16, 16, 16),
+        ],
+        job_time="00:30:00",
     ),
 }
 
@@ -520,6 +581,36 @@ PARALLEL = {
         (256, 2, 28, 2),
         (512, 1, 56, 1),
     ],
+    1024: [
+        (128, 8, 7, 8),
+        (256, 4, 14, 4),
+        (512, 2, 28, 2),
+        (1024, 1, 56, 1),
+    ],
+    2048: [
+        (256, 8, 7, 8),
+        (512, 4, 14, 4),
+        (1024, 2, 28, 2),
+        (2048, 1, 56, 1),
+    ],
+    4096: [
+        (512, 8, 7, 8),
+        (1024, 4, 14, 4),
+        (2048, 2, 28, 2),
+        (4096, 1, 56, 1),
+    ],
+    8192: [
+        (1024, 8, 7, 8),
+        (2048, 4, 14, 4),
+        (4096, 2, 28, 2),
+        (8192, 1, 56, 1),
+    ],
+    16384: [
+        (2048, 8, 7, 8),
+        (4096, 4, 14, 4),
+        (8192, 2, 28, 2),
+        (16384, 1, 56, 1),
+    ],
 }
 
 
@@ -532,7 +623,10 @@ def main():
         "--use-pme", action="store_true", help="Use PME scheme variations"
     )
     parser.add_argument(
-        "--system", type=str, default="APOA1", help="System to use (APOA1, DHFR, UUN)"
+        "--system",
+        type=str,
+        default="APOA1",
+        help="System to use (APOA1, DHFR, UUN, TDP43)",
     )
     args = parser.parse_args()
 
@@ -570,6 +664,8 @@ def main():
     configurations = copy.deepcopy(configurations_stage3)
 
     for cfg_idx, configuration in enumerate(configurations):
+        assert configuration.job_time is not None
+
         with open(f"{cfg_idx:04}.INP", "w") as file:
             file.write(configuration.to_string())
 
@@ -602,6 +698,7 @@ def main():
                     cpus_per_task,
                     gpus_per_node,
                     compiler,
+                    configuration.job_time,
                 )
             )
 
