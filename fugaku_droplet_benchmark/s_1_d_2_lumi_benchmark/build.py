@@ -535,6 +535,8 @@ SYSTEM_CONFIGURATIONS = {
             (16, 16, 8),
             # 4096
             (16, 16, 16),
+            # 8192
+            (32, 16, 16),
         ],
         job_time="00:30:00",
         job_bin="./cgdyn",
