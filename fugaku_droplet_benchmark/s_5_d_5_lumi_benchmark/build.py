@@ -484,9 +484,9 @@ SYSTEM_CONFIGURATIONS = {
     ),
     System.TDP43: Configuration(
         input=InputBlock(
-            grotopfile="../rCG_Droplets_50_50_50_100_b100_f52_g20_d0_rho0.62.top",
-            grocrdfile="../crd/rCG_Droplets_50_50_50_100_b100_f52_g20_d0_rho0.62.gro",
-            rstfile="../_DROPLET_test_eq_s_1_d_2_01_02.rst",
+            grotopfile="../rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho1.00.top",
+            grocrdfile="../crd/rCG_Droplets_50_50_50_100_b100_f85_g20_d0_rho1.00.gro",
+            rstfile="../_DROPLET_test_eq_s_5_d_5_05_05.rst",
         ),
         energy=EnergyBlock(
             forcefield=Forcefield.RESIDCG,
@@ -535,6 +535,8 @@ SYSTEM_CONFIGURATIONS = {
             (16, 16, 8),
             # 4096
             (16, 16, 16),
+            # 8192
+            (32, 16, 16),
         ],
         job_time="00:30:00",
         job_bin="./cgdyn",
