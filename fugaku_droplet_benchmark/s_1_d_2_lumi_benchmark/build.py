@@ -297,7 +297,14 @@ class Job:
         string += "\n"
         string += "# Benchmark\n"
         for i in range(self.nruns):
-            string += f"srun {self.job_bin} {self.inp_idx:04}.INP 2>&1 | tee {self.inp_idx:04}-{self.job_idx:04}-{self.nodes:04}-{self.ntasks_per_node:04}-{self.cpus_per_task:04}-{self.gpus_per_node:04}-{i:04}.OUT\n"
+            prefix = f"{self.inp_idx:04}-{self.job_idx:04}-{self.nodes:04}-{self.ntasks_per_node:04}-{self.cpus_per_task:04}-{self.gpus_per_node:04}-{i:04}"
+            stdout = f"{prefix}.OUT"
+            stderr = f"{prefix}.ERR"
+
+            string += f"srun {self.job_bin} {self.inp_idx:04}.INP"
+            string += f" > {stdout}"
+            string += f"2> {stderr}"
+            string += "\n"
 
         return string
 
