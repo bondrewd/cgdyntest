@@ -303,7 +303,7 @@ class Job:
 
             string += f"srun {self.job_bin} {self.inp_idx:04}.INP"
             string += f" > {stdout}"
-            string += f"2> {stderr}"
+            string += f" 2> {stderr}"
             string += "\n"
 
         return string
